@@ -19,7 +19,30 @@ export class EmpDashboardComponent implements OnInit {
   isActiveBtn: boolean=false;
   selectedFunc: string='';
 
-  constructor(private fb: FormBuilder){}
+  employeeTimesheet = [
+    { timeslot: '10AM-11AM', function: 'Button1', projectAndClient: 'ProjectList1', module: 'Module1', minute: 15 },
+    { timeslot: '10AM-11AM', function: 'Button2', projectAndClient: 'ProjectList2', module: 'Module2', minute: 20 },
+    { timeslot: '11AM-12AM', function: 'Button3', projectAndClient: 'ProjectList3', module: 'Module3', minute: 30 },
+    { timeslot: '11AM-12AM', function: 'Button4', projectAndClient: 'ProjectList1', module: 'Module2', minute: 10 },
+    { timeslot: '12AM-1PM', function: 'Button1', projectAndClient: 'ProjectList3', module: 'Module1', minute: 25 }
+  ];
+
+  groupedTimesheet: { timeslot: string, entries: any[] }[] = [];
+
+  constructor(private fb: FormBuilder){
+    const map = new Map<string, any[]>();
+    this.employeeTimesheet.forEach(entry => {
+      if (!map.has(entry.timeslot)) {
+        map.set(entry.timeslot, []);
+      }
+      map.get(entry.timeslot)?.push(entry);
+    });
+
+    this.groupedTimesheet = Array.from(map.entries()).map(([timeslot, entries]) => ({
+      timeslot,
+      entries
+    }));
+  }
 
   ngOnInit() {
     this.currentDateTime = new Date();
