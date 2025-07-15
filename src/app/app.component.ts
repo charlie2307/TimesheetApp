@@ -3,10 +3,11 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { LoginComponent } from './login/login/login.component';
 import { CommonModule } from '@angular/common';
 import { EmpDashboardComponent } from './employee/emp-dashboard/emp-dashboard.component';
+import { AdminComponent } from "./admin/admin/admin.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,LoginComponent,RouterModule,CommonModule,EmpDashboardComponent],
+  imports: [RouterOutlet, LoginComponent, RouterModule, CommonModule, EmpDashboardComponent, AdminComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

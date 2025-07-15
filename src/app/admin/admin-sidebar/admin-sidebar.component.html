@@ -1,0 +1,144 @@
+<!-- Sidebar -->
+<div class="sidebar" id="myTopnav" class="bg-dark text-white p-3 sidebar ">
+
+    <h4 class="text-center">Timesheet</h4>
+    <hr>
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link text-white d-flex align-items-center"
+                routerLink="/admin/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Employee
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/employee" routerLinkActive="active">
+                        Add Employee
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/viewEmployee" routerLinkActive="active">
+                        View Employee
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Project
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/project" routerLinkActive="active">
+                        Add Project
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/viewProject" routerLinkActive="active">
+                        View Project
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Client
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/project" routerLinkActive="active">
+                        Add Client
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/viewProject" routerLinkActive="active">
+                        View Client
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Function
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/function" routerLinkActive="active">
+                        Add Function
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/viewFunction" routerLinkActive="active">
+                        View Function
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Module
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/module" routerLinkActive="active">
+                        Add Module
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/viewModule" routerLinkActive="active">
+                        View Module
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Role
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/role" routerLinkActive="active">
+                        Add Role
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/viewRole" routerLinkActive="active">
+                        View Role
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Timeslot
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/timeslot" routerLinkActive="active">
+                        Add Timeslot
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" routerLink="/admin/viewTimeslot" routerLinkActive="active">
+                        View Timeslot
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <div class="d-grid gap-2 col-10 mx-auto">
+                <button class="btn btn-danger" (click)="logout()">Sign
+                    Out</button>
+            </div>
+        </li>
+    </ul>
+</div>

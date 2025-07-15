@@ -1,0 +1,19 @@
+<!-- <app-navbar></app-navbar> -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 p-0">
+            <app-admin-sidebar></app-admin-sidebar>
+        </div>
+        <div class="col-md-9 p-3">
+            <!-- <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/home">Home</a>
+        </li> -->
+            <div class="d-flex justify-content-end">
+                <button routerLink="/home" class="btn btn-info shadow btn-md">Back to Home</button>
+            </div>
+
+            <router-outlet></router-outlet>
+            
+        </div>
+    </div>
+</div>

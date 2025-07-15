@@ -3,10 +3,11 @@ import { NavbarComponent } from '../../navbar/navbar.component';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { EmpService, ProjectClient } from '../../services/emp.service';
 
 @Component({
   selector: 'app-emp-dashboard',
-  imports: [NavbarComponent, RouterOutlet, RouterModule, CommonModule,ReactiveFormsModule,FormsModule],
+  imports: [NavbarComponent, RouterModule, CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './emp-dashboard.component.html',
   styleUrl: './emp-dashboard.component.css'
 })
@@ -16,8 +17,10 @@ export class EmpDashboardComponent implements OnInit {
   minutes: number[] = [];
   selectedMinute: number | null = null;
   timesheetForm!: FormGroup;
-  isActiveBtn: boolean=false;
-  selectedFunc: string='';
+  isActiveBtn: boolean = false;
+  selectedFunc: string = '';
+  functions: any[] = [];
+  projectClients: ProjectClient[] = [];
 
   employeeTimesheet = [
     { timeslot: '10AM-11AM', function: 'Button1', projectAndClient: 'ProjectList1', module: 'Module1', minute: 15 },
@@ -29,7 +32,7 @@ export class EmpDashboardComponent implements OnInit {
 
   groupedTimesheet: { timeslot: string, entries: any[] }[] = [];
 
-  constructor(private fb: FormBuilder){
+  constructor(private fb: FormBuilder, private empService: EmpService) {
     const map = new Map<string, any[]>();
     this.employeeTimesheet.forEach(entry => {
       if (!map.has(entry.timeslot)) {
@@ -54,7 +57,8 @@ export class EmpDashboardComponent implements OnInit {
 
     this.timesheetForm = this.fb.group({
       type: ['', Validators.required],
-      minute: [{ value: '', disabled: true }, Validators.required], 
+      minute: [{ value: '', disabled: true }, Validators.required],
+      projectAndClient: ['', Validators.required]
     });
 
     //time visibility
@@ -76,11 +80,37 @@ export class EmpDashboardComponent implements OnInit {
       minute: [''],
       functionBtn: this.selectedFunc
     });
+
+    this.loadFunctions();
+    this.loadProjects();
+  }
+
+  loadFunctions() {
+    this.empService.getFunctions().subscribe(
+      (data) => {
+        this.functions = data;
+        console.log(data);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  loadProjects() {
+    this.empService.getProjectsWithClients().subscribe(
+      (data) => {
+        this.projectClients = data;
+        console.log(data);
+      },
+      (error) => {
+        console.error(error)
+      });
   }
 
   onButtonClick(button: string) {
     this.timesheetForm.patchValue({ functionBtn: button });
-    this.selectedFunc=button;
+    this.selectedFunc = button;
   }
 
   onSubmit() {

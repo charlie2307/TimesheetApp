@@ -17,27 +17,35 @@
                     </select>
                 </td>
                 <td>
-                    <label for>Functions</label>
-                    <select class="w-100" formControlName="projectAndClient">
-                        <option value="ProjectList1">Button1</option>
-                        <option value="ProjectList2">Button2</option>
-                        <option value="ProjectList3">Button3</option>
+                    <label for="function">Functions</label>
+                    <select class="w-100"  formControlName="function">
+                        <option value>-- Select Function --</option>
+                        <option *ngFor="let func of functions" [value]="func.fuN_NAME">{{
+                            func.fuN_NAME }}</option>
                     </select>
+                    <div class="text-danger"
+                        *ngIf="timesheetForm.get('function')?.invalid && timesheetForm.get('function')?.touched">
+                        Function is required
+                    </div>
                 </td>
+
                 <td>
-                    <label for>Project and Client</label>
+                    <label for>ClientCode - ProjectName</label>
                     <select class="w-100" formControlName="projectAndClient">
-                        <option value="ProjectList1">ProjectList1</option>
-                        <option value="ProjectList2">ProjectList2</option>
-                        <option value="ProjectList3">ProjectList3</option>
+                        <option value>-- Select Function --</option>
+                        <option *ngFor="let prod of projectClients" [value]="prod.client_code+'-'+prod.proj_name">{{
+                            prod.client_code+'-'+prod.proj_name }}</option>
                     </select>
+                    <div class="text-danger"
+                        *ngIf="timesheetForm.get('projectAndClient')?.invalid && timesheetForm.get('projectAndClient')?.touched">
+                        clientCode-productName is required
+                    </div>
                 </td>
+
                 <td>
                     <label for>Modules</label>
                     <select class="w-100" formControlName="module">
-                        <option value="Module1">Module1</option>
-                        <option value="Module2">Module2</option>
-                        <option value="Module3">Module3</option>
+                        <option value=""></option>
                     </select>
                 </td>
             </tr>
