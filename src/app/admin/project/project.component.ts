@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-project',
@@ -11,11 +12,10 @@ import { RouterModule } from '@angular/router';
 })
 export class ProjectComponent implements OnInit{
   projectForm!: FormGroup;
+  projects:any[]=[];
+  clients:any[]=[];
 
-  // Example client list for dropdown
-  clients: string[] = ['Client A', 'Client B', 'Client C'];
-
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,private adminService:AdminService) {}
 
   ngOnInit() {
     this.projectForm = this.fb.group({
@@ -36,6 +36,18 @@ export class ProjectComponent implements OnInit{
       ],
       clientName: ['', Validators.required],
     });
+
+    this.adminService.getProjects().subscribe(
+      (data)=>{
+        this.projects=data;
+        console.log(data);
+      });
+
+      this.adminService.getClients().subscribe(
+      (data)=>{
+        this.clients=data;
+        console.log(data);
+      });
   }
 
   get projectName() {
@@ -59,4 +71,5 @@ export class ProjectComponent implements OnInit{
       this.projectForm.markAllAsTouched();
     }
   }
+  
 }

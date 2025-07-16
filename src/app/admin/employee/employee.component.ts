@@ -1,21 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AdminService } from '../../services/admin.service';
 
+export interface Roles {
+  rolE_ID: number;
+  rolE_NAME: string;
+}
+export interface Employee {
+  emP_ID: number;
+  rolE_ID: number;
+  emP_NAME: string;
+  emP_CODE: string;
+  emP_MOBILE_NO: number;
+  emP_EMAIL_ID: string;
+  emP_PASSWORD: string;
+}
 @Component({
   selector: 'app-employee',
   imports: [CommonModule, ReactiveFormsModule, RouterModule, FormsModule],
   templateUrl: './employee.component.html',
   styleUrl: './employee.component.css'
 })
-export class EmployeeComponent {
-  employeeForm: FormGroup;
-  employees: any[] = [];
+export class EmployeeComponent implements OnInit {
+  employeeForm!: FormGroup;
+  employees: Employee[] = [];
+  roles: Roles[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private adminService: AdminService, private router: Router) {
     this.employeeForm = this.fb.group({
-      name: [
+      emP_NAME: [
         '',
         [
           Validators.required,
@@ -24,21 +39,34 @@ export class EmployeeComponent {
           Validators.pattern(/^[a-zA-Z ]+$/)
         ]
       ],
-      mobileNo: [
+      emP_CODE: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+          Validators.pattern(/^[a-zA-Z ]+$/)
+        ]
+      ],
+      rolE_ID: [
+        '',
+        [Validators.required]
+      ],
+      emP_MOBILE_NO: [
         '',
         [
           Validators.required,
           Validators.pattern(/^[6-9]\d{9}$/)
         ]
       ],
-      email: [
+      emP_EMAIL_ID: [
         '',
         [
           Validators.required,
           Validators.email
         ]
       ],
-      password: [
+      emP_PASSWORD: [
         '',
         [
           Validators.required,
@@ -49,18 +77,70 @@ export class EmployeeComponent {
     });
   }
 
+  ngOnInit(): void {
+
+
+    this.adminService.getEmployees().subscribe(
+      (data) => {
+        this.employees = data;
+        console.log(data);
+      });
+
+    this.adminService.getRoles().subscribe(
+      (data) => {
+        this.roles = data;
+        console.log(data);
+      }
+    )
+  }
+
   onSubmit() {
     if (this.employeeForm.valid) {
-      this.employees.push(this.employeeForm.value);
+
+      console.log(this.employeeForm.value)
+
+      if (this.employeeForm.invalid) {
+        this.employeeForm.markAllAsTouched();
+        return;
+      }
+
+      const formData = this.employeeForm.value;
+      console.log('Submitting employee:', formData);
+
+      this.adminService.addEmployee(formData).subscribe({
+        next: (res) => {
+          alert('Employee added successfully!');
+          this.employeeForm.reset();
+        },
+        error: (err) => {
+          console.error('Registration error:', err);
+          alert('Failed to add employee');
+        }
+      });
+
+      // this.adminService.addEmployee(this.employeeForm.value).subscribe(
+      //   (data) => {
+      //     console.log('Form Submitted:', this.employeeForm.value);
+      //     alert('Employee registered successfully!');
+      //     this.employeeForm.reset();
+      //   },
+      //   (err) => {
+      //     this.employeeForm.markAllAsTouched();
+      //     console.error('Registration error:', err);
+      //     alert('Registration failed. Please try again.');
+      //   }
+      // );
       this.employeeForm.reset();
     } else {
       this.employeeForm.markAllAsTouched();
     }
   }
 
-  get name() { return this.employeeForm.get('name'); }
-  get mobileNo() { return this.employeeForm.get('mobileNo'); }
-  get email() { return this.employeeForm.get('email'); }
-  get password() { return this.employeeForm.get('password'); }
-
+  get name() { return this.employeeForm.get('emP_NAME'); }
+  get empCode() { return this.employeeForm.get('emP_CODE'); }
+  get role() { return this.employeeForm.get('rolE_ID'); }
+  get mobileNo() { return this.employeeForm.get('emP_MOBILE_NO'); }
+  get email() { return this.employeeForm.get('emP_EMAIL_ID'); }
+  get password() { return this.employeeForm.get('emP_PASSWORD'); }
+  
 }

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AdminService } from '../../services/admin.service';
 
 interface Role {
   name: string;
@@ -16,10 +17,10 @@ interface Role {
 })
 export class RoleComponent implements OnInit {
   roleForm!: FormGroup;
-  roles: Role[] = [];
+  roles: any[] = [];
   private roleCounter: number = 0;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,private adminService:AdminService) { }
 
   ngOnInit() {
     this.roleForm = this.fb.group({
@@ -33,6 +34,12 @@ export class RoleComponent implements OnInit {
         ],
       ],
     });
+
+    this.adminService.getRoles().subscribe(
+      (data)=>{
+        this.roles=data;
+        console.log(data);
+      });
   }
 
   get roleName() {

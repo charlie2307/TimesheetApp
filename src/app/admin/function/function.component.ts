@@ -19,7 +19,7 @@ export class FunctionComponent implements OnInit {
   functionForm!: FormGroup;
   functions:any[]=[];
   roles:any[]=[];
-  addedFunctions: FunctionEntry[] = [];
+  
 
   constructor(private fb: FormBuilder, private adminService:AdminService) {}
 
@@ -37,8 +37,8 @@ export class FunctionComponent implements OnInit {
       role: ['', Validators.required]
     });
 
-    this.adminService.getRoles().subscribe(data => {
-      this.roles = data;
+    this.adminService.getFunctions().subscribe(data => {
+      this.functions = data;
       console.log(data);
     });
 
@@ -67,7 +67,7 @@ export class FunctionComponent implements OnInit {
 
       // prevent duplicates
       if (
-        this.addedFunctions.some(
+        this.functions.some(
           f =>
             f.functionName.toLowerCase() === entry.functionName.toLowerCase() &&
             f.role === entry.role
@@ -77,7 +77,7 @@ export class FunctionComponent implements OnInit {
         return;
       }
 
-      this.addedFunctions.push(entry);
+      this.functions.push(entry);
       this.functionForm.reset();
     } else {
       this.functionForm.markAllAsTouched();

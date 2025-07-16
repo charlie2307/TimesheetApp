@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AdminComponent } from '../admin/admin.component';
+import { AdminService } from '../../services/admin.service';
 
 interface ModuleEntry {
   moduleName: string;
@@ -8,22 +10,17 @@ interface ModuleEntry {
 }
 @Component({
   selector: 'app-module',
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './module.component.html',
   styleUrl: './module.component.css'
 })
 export class ModuleComponent implements OnInit {
   moduleForm!: FormGroup;
 
-  functions: string[] = [
-    'function1',
-    'function2',
-    'function3'
-  ]; // these could come from a service or API
+  functions: any[] = [];
+  modules:any[]=[];
 
-  addedModules: ModuleEntry[] = [];
-
-constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private adminService: AdminService) { }
 
   ngOnInit() {
     this.moduleForm = this.fb.group({
@@ -38,6 +35,18 @@ constructor(private fb: FormBuilder) {}
       ],
       function: ['', Validators.required]
     });
+
+    this.adminService.getFunctions().subscribe(data => {
+      this.functions = data;
+      console.log(data);
+    });
+
+    this.adminService.getModules().subscribe(data => {
+      this.modules = data;
+      console.log(data);
+    });
+
+
   }
 
   get moduleName() {
@@ -56,21 +65,21 @@ constructor(private fb: FormBuilder) {}
       };
 
       // prevent duplicates
-      if (
-        this.addedModules.some(
-          f =>
-            f.moduleName.toLowerCase() === entry.moduleName.toLowerCase() &&
-            f.function === entry.function
-        )
-      ) {
-        alert('This function & role combination already exists!');
-        return;
-      }
+      // if (
+      // this.addedModules.some(
+      // f =>
+      // f.moduleName.toLowerCase() === entry.moduleName.toLowerCase() &&
+      // f.function === entry.function
+      // )
+      // ) {
+    //   alert('This function & role combination already exists!');
+    //   return;
+    // }
 
-      this.addedModules.push(entry);
-      this.moduleForm.reset();
-    } else {
-      this.moduleForm.markAllAsTouched();
-    }
+    // this.addedModules.push(entry);
+    this.moduleForm.reset();
+  } else {
+  this.moduleForm.markAllAsTouched();
+}
   }
 }
