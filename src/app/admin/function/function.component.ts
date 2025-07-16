@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AdminService } from '../../services/admin.service';
 
 interface FunctionEntry {
   functionName: string;
@@ -16,18 +17,11 @@ interface FunctionEntry {
 })
 export class FunctionComponent implements OnInit {
   functionForm!: FormGroup;
-
-  roles: string[] = [
-    'Developer',
-    'Manager',
-    'Tester',
-    'Analyst',
-    'Admin'
-  ]; // these could come from a service or API
-
+  functions:any[]=[];
+  roles:any[]=[];
   addedFunctions: FunctionEntry[] = [];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private adminService:AdminService) {}
 
   ngOnInit() {
     this.functionForm = this.fb.group({
@@ -42,6 +36,18 @@ export class FunctionComponent implements OnInit {
       ],
       role: ['', Validators.required]
     });
+
+    this.adminService.getRoles().subscribe(data => {
+      this.roles = data;
+      console.log(data);
+    });
+
+    this.adminService.getRoles().subscribe(data => {
+      this.roles = data;
+      console.log(data);
+    });
+
+
   }
 
   get functionName() {

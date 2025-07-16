@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AdminComponent } from '../../admin/admin/admin.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -13,13 +14,15 @@ import { AdminComponent } from '../../admin/admin/admin.component';
 })
 export class LoginComponent implements OnInit{
   loginForm!: FormGroup;
+  email = '';
+  password = '';
   error: string = '';
 
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) { }
   
   ngOnInit(): void {
@@ -28,6 +31,7 @@ export class LoginComponent implements OnInit{
       pass: ['', [Validators.required,Validators.minLength(8),
       Validators.maxLength(20)]]
     });
+    // this.router.navigate(['/empDashboard']);
   }
 
   login(): void {
@@ -47,19 +51,37 @@ export class LoginComponent implements OnInit{
       //   }
       // );
     } else {
-      this.router.navigate(['/login']);
-      // this.authService.login(email, password).subscribe(
-      //   (res: any) => {
-      //     if (res.status === 'success') {
-            
-      //     } else {
-      //       this.error = 'Invalid login attempt';
-      //     }
-      //   },
-      //   (err) => {
-      //     this.error = 'Login failed';
-      //   }
-      // );
+      
+      this.authService.login(email, password).subscribe(
+        (res: any) => {
+          console.log(res);
+          if (res.role !== 'admin') {
+            this.router.navigate(['/empDashboard']);
+          } else {
+            this.error = 'Invalid login attempt';
+          }
+        },
+        (err) => {
+          this.error = 'Login failed';
+          this.router.navigate(['/login']);
+        }
+      );
     }
   }
+
+  // onLogin() {
+  //   this.authService.login(this.email, this.password).subscribe({
+  //     next: (res: any) => {
+  //       // Here you can store in localStorage if you want
+  //       localStorage.setItem('empId', res.empId);
+  //       localStorage.setItem('roleId', res.roleId);
+  //       this.router.navigate(['/empDashboard']);
+  //     },
+  //     error: err => {
+  //       this.error = err.error.message || 'Login failed';
+  //     }
+  //   });
+  // }
+
+  
 }

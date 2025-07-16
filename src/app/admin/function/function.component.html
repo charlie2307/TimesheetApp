@@ -34,7 +34,7 @@
           <label>Role</label>
           <select class="form-select" formControlName="role">
             <option value="">Select Role</option>
-            <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+            <option *ngFor="let r of roles" [value]="r.rolE_ID">{{ r.rolE_NAME }}</option>
           </select>
           <div class="text-danger" *ngIf="role?.invalid && role?.touched">
             <small>Role is required</small>
@@ -59,10 +59,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let f of addedFunctions; let i = index">
+          <tr *ngFor="let f of functions; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ f.functionName }}</td>
-            <td>{{ f.role }}</td>
+            <td>{{ f.fuN_NAME }}</td>
+            <td>{{ f.rolE_NAME }}</td>
           </tr>
         </tbody>
       </table>
