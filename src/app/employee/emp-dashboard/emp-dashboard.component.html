@@ -11,14 +11,14 @@
                     <label for="timeslot">Timeslot</label>
                     <select id="timeslot" class="w-100 mh-3"
                         formControlName="timeslot">
-                        <option value="10AM-11AM">10AM-11AM</option>
+                        <option value="{{data.sloT_ID}}" *ngFor="let data of SlotDetails">{{data.sloT_NAME}}</option>
                         <option value="11AM-12AM">11AM-12AM</option>
                         <option value="12AM-1PM">12AM-1PM</option>
                     </select>
                 </td>
                 <td>
                     <label for="function">Functions</label>
-                    <select class="w-100"  formControlName="function">
+                    <select class="w-100"  formControlName="function"(change)="onSelectChange($event)">
                         <option value>-- Select Function --</option>
                         <option *ngFor="let func of functions" [value]="func.fuN_NAME">{{
                             func.fuN_NAME }}</option>
@@ -32,7 +32,7 @@
                 <td>
                     <label for>ClientCode - ProjectName</label>
                     <select class="w-100" formControlName="projectAndClient">
-                        <option value>-- Select Function --</option>
+                        <option value>-- Select Project Name --</option>
                         <option *ngFor="let prod of projectClients" [value]="prod.client_code+'-'+prod.proj_name">{{
                             prod.client_code+'-'+prod.proj_name }}</option>
                     </select>
@@ -44,27 +44,30 @@
 
                 <td>
                     <label for>Modules</label>
-                    <select class="w-100" formControlName="module">
-                        <option value=""></option>
+                    <select class="w-100" formControlName="module" >
+                       <option value>-- Select Module --</option>
+                        <option value="{{module.module}}" *ngFor="let module of modules">{{module.module}}</option>
                     </select>
                 </td>
             </tr>
             <tr>
-                <td>
-                    <label for>Type</label>
-                    <select class="w-100" formControlName="type">
-                        <option value disabled>Select Type</option>
-                        <option value="Full">Full</option>
-                        <option value="Split">Split</option>
+                <td >
+                    <label for>Time Mode</label>
+                    <select class="w-100" formControlName="type " (change)="onselectTimeType($event)">
+                        <!-- <option selected>Select Your Time Mode</option> -->
+                         <option value [selected]="true">-- Select Module --</option>
+                        <option value="1">Full</option>
+                        <option value="2">Split</option>
                     </select>
                 </td>
-                <td>
+                <td *ngIf="condition">
                     <label for>Time</label>
                     <select class="w-100" formControlName="minute">
                         <option value disabled>Select Minute</option>
-                        <option *ngFor="let min of minutes" [value]="min">{{ min
-                            }}</option>
+                        <option *ngFor="let min of minutes" [value]="min+1">{{ min+1
+                            }} minutes</option>
                     </select>
+                    <!-- <input type="time" id="timePicker" step="60"/> -->
                 </td>
                 <td>
                     <label for>Description</label>
@@ -104,6 +107,9 @@
                         <td>{{ entry.projectAndClient }}</td>
                         <td>{{ entry.module }}</td>
                         <td>{{ entry.minute }}</td>
+                    </tr>
+                    <tr>
+                      
                     </tr>
                 </ng-container>
             </tbody>

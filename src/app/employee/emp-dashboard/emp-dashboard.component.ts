@@ -12,8 +12,11 @@ import { EmpService, ProjectClient } from '../../services/emp.service';
   styleUrl: './emp-dashboard.component.css'
 })
 export class EmpDashboardComponent implements OnInit {
+  time: number = 60;
+  condition: boolean = false;
   currentDateTime!: Date;
   today = new Date();
+  modules: any[] = [{}];
   minutes: number[] = [];
   selectedMinute: number | null = null;
   timesheetForm!: FormGroup;
@@ -21,6 +24,19 @@ export class EmpDashboardComponent implements OnInit {
   selectedFunc: string = '';
   functions: any[] = [];
   projectClients: ProjectClient[] = [];
+
+
+SlotDetails:any[]=[];
+
+TIMESHEET:any={
+EMP_ID:0,
+SLOT_ID:0,
+HOURS:0,
+PROJ_ID:0,
+FUN_ID:0,
+MOD_ID:0,
+
+}
 
   employeeTimesheet = [
     { timeslot: '10AM-11AM', function: 'Button1', projectAndClient: 'ProjectList1', module: 'Module1', minute: 15 },
@@ -48,12 +64,13 @@ export class EmpDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentDateTime = new Date();
+    const timeChange =
+      this.currentDateTime = new Date();
     setInterval(() => {
       this.currentDateTime = new Date();
     }, 1000);
 
-    this.minutes = Array.from({ length: 60 }, (_, i) => i);
+    this.minutes = Array.from({ length: this.time }, (_, i) => i);
 
     this.timesheetForm = this.fb.group({
       type: ['', Validators.required],
@@ -72,20 +89,29 @@ export class EmpDashboardComponent implements OnInit {
       }
     });
 
-    
+
 
 
     this.timesheetForm = this.fb.group({
+      
       timeslot: [''],
       projectAndClient: [''],
       module: [''],
-      type: [''],
+      type: 0,
       minute: [''],
       functionBtn: this.selectedFunc
     });
 
     this.loadFunctions();
     this.loadProjects();
+    this.empService.GetSlot().subscribe(response=>{
+      
+   this.SlotDetails=response;
+   console.log(this.SlotDetails);
+    },error=>{
+      console.log(error);
+    }
+  );
   }
 
   loadFunctions() {
@@ -117,6 +143,43 @@ export class EmpDashboardComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.timesheetForm.value);
+     console.log(this.timesheetForm.value);
+ 
+    this.time = this.time - this.timesheetForm.get('minute')?.value;
+this.minutes = Array.from({ length: this.time }, (_, i) => i);
+
+    //  this.minutes = Array.from({ length: 60 }, (_, i) => i);
+  }
+  onSelectChange(e: Event) {
+    const function_name = (e.target as HTMLInputElement).value;
+
+    this.empService.getModules(function_name).subscribe(resp => {
+
+      this.modules = resp;
+      console.log(this.modules);
+
+    },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+  onselectTimeType(e: Event) {
+    const confirm = (e.target as HTMLInputElement).value;
+    if (confirm == '2') {
+      this.condition = true;
+     
+
+    }
+     this.timesheetForm.patchValue({
+        type: 2
+      })
+    if (confirm == '1') {
+      this.condition = false;
+     
+      this.timesheetForm.patchValue({
+        type: 1
+      })
+    }
   }
 }
