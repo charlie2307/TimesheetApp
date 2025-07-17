@@ -9,21 +9,46 @@
                     <input
                         type="text"
                         class="form-control"
-                        formControlName="projectName"
+                        formControlName="proJ_NAME"
                         placeholder="Enter Project Name" />
                     <div
                         class="text-danger"
-                        *ngIf="projectName?.invalid && projectName?.touched">
-                        <small *ngIf="projectName?.errors?.['required']">Project
+                        *ngIf="proJ_NAME?.invalid && proJ_NAME?.touched">
+                        <small *ngIf="proJ_NAME?.errors?.['required']">Project
                             Name is
                             required</small>
-                        <small *ngIf="projectName?.errors?.['minlength']">At
+                        <small *ngIf="proJ_NAME?.errors?.['minlength']">At
                             least 3
                             characters</small>
-                        <small *ngIf="projectName?.errors?.['maxlength']">Max
+                        <small *ngIf="proJ_NAME?.errors?.['maxlength']">Max
                             100
                             characters</small>
-                        <small *ngIf="projectName?.errors?.['pattern']">Only
+                        <small *ngIf="proJ_NAME?.errors?.['pattern']">Only
+                            letters,
+                            numbers, and spaces allowed</small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label>Project Code</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        formControlName="proJ_CODE"
+                        placeholder="Enter Project Name" />
+                    <div
+                        class="text-danger"
+                        *ngIf="proJ_CODE?.invalid && proJ_CODE?.touched">
+                        <small *ngIf="proJ_CODE?.errors?.['required']">Project
+                            Name is
+                            required</small>
+                        <small *ngIf="proJ_CODE?.errors?.['minlength']">At
+                            least 3
+                            characters</small>
+                        <small *ngIf="proJ_CODE?.errors?.['maxlength']">Max
+                            100
+                            characters</small>
+                        <small *ngIf="proJ_CODE?.errors?.['pattern']">Only
                             letters,
                             numbers, and spaces allowed</small>
                     </div>
@@ -34,13 +59,13 @@
                     <textarea
                         rows="3"
                         class="form-control"
-                        formControlName="projectDescription"
+                        formControlName="proJ_DESCRIPTION"
                         placeholder="Enter Project Description"></textarea>
                     <div
                         class="text-danger"
-                        *ngIf="projectDescription?.invalid && projectDescription?.touched">
+                        *ngIf="proJ_DESCRIPTION?.invalid && proJ_DESCRIPTION?.touched">
                         <small
-                            *ngIf="projectDescription?.errors?.['maxlength']">Max
+                            *ngIf="proJ_DESCRIPTION?.errors?.['maxlength']">Max
                             200
                             characters</small>
                     </div>
@@ -48,16 +73,15 @@
 
                 <div class="mb-3">
                     <label>Client Name</label>
-                    <select class="form-select" formControlName="clientName">
+                    <select class="form-select" formControlName="clienT_NAME">
                         <option value>Select Client</option>
-                        <option *ngFor="let client of clients"
-                            [value]="client.clienT_ID">
+                        <option *ngFor="let client of clients" [value]="client.clienT_ID">
                             {{ client.clienT_NAME }}
                         </option>
                     </select>
                     <div
                         class="text-danger"
-                        *ngIf="clientName?.invalid && clientName?.touched">
+                        *ngIf="clienT_NAME?.invalid && clienT_NAME?.touched">
                         <small>Client Name is required</small>
                     </div>
                 </div>
@@ -94,6 +118,7 @@
             <div *ngIf="projects.length === 0" class="text-center mt-4">
                 <p>No projects found.</p>
             </div>
+
         </div>
     </div>
 </div>

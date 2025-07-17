@@ -9,22 +9,49 @@
             type="text"
             class="form-control"
             placeholder="Enter Module Name"
-            formControlName="moduleName"
+            formControlName="moD_NAME"
           />
           <div
             class="text-danger"
-            *ngIf="moduleName?.invalid && moduleName?.touched"
+            *ngIf="moD_NAME?.invalid && moD_NAME?.touched"
           >
-            <small *ngIf="moduleName?.errors?.['required']"
+            <small *ngIf="moD_NAME?.errors?.['required']"
               >Module Name is required</small
             >
-            <small *ngIf="moduleName?.errors?.['minlength']"
+            <small *ngIf="moD_NAME?.errors?.['minlength']"
               >At least 3 characters</small
             >
-            <small *ngIf="moduleName?.errors?.['maxlength']"
+            <small *ngIf="moD_NAME?.errors?.['maxlength']"
               >Maximum 50 characters</small
             >
-            <small *ngIf="moduleName?.errors?.['pattern']"
+            <small *ngIf="moD_NAME?.errors?.['pattern']"
+              >Only letters and spaces allowed</small
+            >
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Module Code</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Module Code"
+            formControlName="moD_CODE"
+          />
+          <div
+            class="text-danger"
+            *ngIf="moD_CODE?.invalid && moD_CODE?.touched"
+          >
+            <small *ngIf="moD_CODE?.errors?.['required']"
+              >Module Code is required</small
+            >
+            <small *ngIf="moD_CODE?.errors?.['minlength']"
+              >At least 3 characters</small
+            >
+            <small *ngIf="moD_CODE?.errors?.['maxlength']"
+              >Maximum 50 characters</small
+            >
+            <small *ngIf="moD_CODE?.errors?.['pattern']"
               >Only letters and spaces allowed</small
             >
           </div>
@@ -32,11 +59,11 @@
 
         <div class="mb-3">
           <label>Function</label>
-          <select class="form-select" formControlName="function">
+          <select class="form-select" formControlName="fuN_NAME">
             <option value="">Select Function</option>
             <option *ngFor="let f of functions" [value]="f.fuN_ID">{{ f.fuN_NAME }}</option>
           </select>
-          <div class="text-danger" *ngIf="function?.invalid && function?.touched">
+          <div class="text-danger" *ngIf="fuN_NAME?.invalid && fuN_NAME?.touched">
             <small>Function is required</small>
           </div>
         </div>
@@ -55,6 +82,7 @@
           <tr>
             <th>#</th>
             <th>Module Name</th>
+            <th>Module Code</th>
             <th>Function</th>
           </tr>
         </thead>
@@ -62,6 +90,7 @@
           <tr *ngFor="let mod of modules; let i = index">
             <td>{{ i + 1 }}</td>
             <td>{{ mod.moD_NAME }}</td>
+            <td>{{mod.moD_CODE}}</td>
             <td>{{ mod.fuN_NAME }}</td>
           </tr>
         </tbody>

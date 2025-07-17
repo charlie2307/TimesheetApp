@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AdminService } from '../../services/admin.service';
 
 interface TimeslotEntry {
   timeslot: string;
@@ -15,63 +16,57 @@ interface TimeslotEntry {
 })
 export class TimeslotComponent implements OnInit {
   timeslotForm!: FormGroup;
-
-  timeslots: string[] = [
-    '10:00 - 11:00',
-    '11:00 - 12:00',
-    '12:00 - 13:00',
-    '13:00 - 14:00',
-    '14:00 - 15:00',
-    '15:00 - 16:00',
-    '16:00 - 17:00',
-    '17:00 - 18:00',
-    '18:00 - 18:00',
-    '19:00 - 19:00',
-    '20:00 - 21:00',
-    '21:00 - 22:00',
-    '22:00 - 23:00',
-    '23:00 - 00:00',
-    '00:00 - 01:00',
-    '01:00 - 02:00',
-    '02:00 - 03:00',
-    '03:00 - 04:00',
-    '04:00 - 05:00',
-    '05:00 - 06:00',
-    '06:00 - 07:00',
-    '07:00 - 08:00',
-    '08:00 - 09:00',
-    '09:00 - 10:00',
-  ];
+  timeslots: string[] = [];
+  time: number = 24;
+  hours: number[] = [];
+ 
 
   addedTimeslots: TimeslotEntry[] = [];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,private adminService:AdminService) {}
 
   ngOnInit() {
     this.timeslotForm = this.fb.group({
-      timeslot: ['', Validators.required],
+      timeslot1: ['', Validators.required],
+      timeslot2: ['', Validators.required],
     });
+
+    this.hours = Array.from({ length: this.time }, (_, i) => i);
   }
 
-  get timeslot() {
-    return this.timeslotForm.get('timeslot');
+  get timeslot1() {
+    return this.timeslotForm.get('timeslot1');
+  }
+  get timeslot2() {
+    return this.timeslotForm.get('timeslot2');
   }
 
-  onSubmit() {
-    if (this.timeslotForm.valid) {
-      const slot = this.timeslot?.value;
-
-      if (this.addedTimeslots.find(t => t.timeslot === slot)) {
-        alert('This timeslot is already added!');
-        return;
-      }
-
-      const timestamp = new Date().toLocaleString();
-
-      this.addedTimeslots.push({ timeslot: slot, timestamp });
-      this.timeslotForm.reset();
-    } else {
-      this.timeslotForm.markAllAsTouched();
+  onSubmit():void {
+    if (this.timeslotForm.invalid) {
+      this.timeslotForm.markAllAsTouched();  // show validation errors
+      return;
     }
+
+    const data = this.timeslotForm.value.timeslot1+"-"+this.timeslotForm.value.timeslot2;
+    const timeslot = {
+    timeslot: data
+  };
+    console.log(timeslot);
+
+    this.adminService.addTimeslot(timeslot).subscribe(
+      (response) => {
+        console.log('Client added successfully', response);
+        alert('Client added successfully!');
+        this.timeslotForm.reset();  // clear the form
+      },
+      (error) => {
+        console.error('Error adding client', error);
+        alert('Something went wrong while adding client.');
+      }
+    );
   }
+
+  editBtn(){}
+
+  deleteBtn(){}
 }

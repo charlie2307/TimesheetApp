@@ -18,22 +18,31 @@ export class ModuleComponent implements OnInit {
   moduleForm!: FormGroup;
 
   functions: any[] = [];
-  modules:any[]=[];
+  modules: any[] = [];
 
   constructor(private fb: FormBuilder, private adminService: AdminService) { }
 
   ngOnInit() {
     this.moduleForm = this.fb.group({
-      moduleName: [
+      moD_NAME: [
         '',
         [
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(50),
-          Validators.pattern(/^[0-9][A-Za-z\s]+$/)
+          Validators.pattern(/^[A-Za-z0-9\s]+$/)
         ]
       ],
-      function: ['', Validators.required]
+      moD_CODE: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+          Validators.pattern(/^[A-Za-z0-9\s]+$/)
+        ]
+      ],
+      fuN_NAME: ['', Validators.required]
     });
 
     this.adminService.getFunctions().subscribe(data => {
@@ -45,41 +54,45 @@ export class ModuleComponent implements OnInit {
       this.modules = data;
       console.log(data);
     });
-
-
   }
 
-  get moduleName() {
-    return this.moduleForm.get('moduleName');
+  get moD_NAME() {
+    return this.moduleForm.get('moD_NAME');
   }
 
-  get function() {
-    return this.moduleForm.get('function');
+  get moD_CODE() {
+    return this.moduleForm.get('moD_CODE');
   }
 
-  onSubmit() {
-    if (this.moduleForm.valid) {
-      const entry: ModuleEntry = {
-        moduleName: this.moduleName?.value,
-        function: this.function?.value
-      };
-
-      // prevent duplicates
-      // if (
-      // this.addedModules.some(
-      // f =>
-      // f.moduleName.toLowerCase() === entry.moduleName.toLowerCase() &&
-      // f.function === entry.function
-      // )
-      // ) {
-    //   alert('This function & role combination already exists!');
-    //   return;
-    // }
-
-    // this.addedModules.push(entry);
-    this.moduleForm.reset();
-  } else {
-  this.moduleForm.markAllAsTouched();
-}
+  get fuN_NAME() {
+    return this.moduleForm.get('fuN_NAME');
   }
+
+  onSubmit():void {
+    if (this.moduleForm.invalid) {
+      this.moduleForm.markAllAsTouched();  // show validation errors
+      return;
+    }
+
+    const clientData = {
+      moD_CODE: this.moduleForm.value.moD_CODE, 
+      moD_NAME: this.moduleForm.value.moD_NAME
+    };
+
+    this.adminService.addClient(clientData).subscribe(
+      (response) => {
+        console.log('Module added successfully', response);
+        alert('Module added successfully!');
+        this.moduleForm.reset();  // clear the form
+      },
+      (error) => {
+        console.error('Error adding module', error);
+        alert('Something went wrong while adding module.');
+      }
+    );
+  }
+
+  editBtn(){}
+
+  deleteBtn(){}
 }

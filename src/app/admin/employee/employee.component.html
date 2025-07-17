@@ -7,13 +7,13 @@
         <div class="mb-2">
           <label class="form-label">Name:</label>
           <input type="text" formControlName="emP_NAME" class="form-control" />
-          <div *ngIf="name?.invalid && name?.touched" class="text-danger small">
-            <div *ngIf="name?.errors?.['required']">Name is required</div>
-            <div *ngIf="name?.errors?.['minlength']">Name must be at least 3
+          <div *ngIf="emP_NAME?.invalid && emP_NAME?.touched" class="text-danger small">
+            <div *ngIf="emP_NAME?.errors?.['required']">Name is required</div>
+            <div *ngIf="emP_NAME?.errors?.['minlength']">Name must be at least 3
               characters</div>
-            <div *ngIf="name?.errors?.['maxlength']">Name cannot exceed 50
+            <div *ngIf="emP_NAME?.errors?.['maxlength']">Name cannot exceed 50
               characters</div>
-            <div *ngIf="name?.errors?.['pattern']">Name can only contain letters
+            <div *ngIf="emP_NAME?.errors?.['pattern']">Name can only contain letters
               and spaces</div>
           </div>
         </div>
@@ -21,17 +21,18 @@
         <div class="mb-2">
           <label class="form-label">EmpCode</label>
           <input type="text" formControlName="emP_CODE" class="form-control" />
-          <div *ngIf="name?.invalid && name?.touched" class="text-danger small">
-            <div *ngIf="name?.errors?.['required']">emp code is required</div>
-            <div *ngIf="name?.errors?.['minlength']">empcode must be at least 3
+          <div *ngIf="emP_CODE?.invalid && emP_CODE?.touched" class="text-danger small">
+            <div *ngIf="emP_CODE?.errors?.['required']">emp code is required</div>
+            <div *ngIf="emP_CODE?.errors?.['minlength']">empcode must be at least 3
               characters</div>
-            <div *ngIf="name?.errors?.['maxlength']">empcode cannot exceed 50
+            <div *ngIf="emP_CODE?.errors?.['maxlength']">empcode cannot exceed 50
               characters</div>
-            <div *ngIf="name?.errors?.['pattern']">empcode can only contain letters
+            <div *ngIf="emP_CODE?.errors?.['pattern']">empcode can only contain
+              letters
               and spaces</div>
           </div>
         </div>
-        
+
         <div class="mb-2">
           <label class="form-label">Role</label>
           <select class="form-select" formControlName="rolE_ID">
@@ -39,30 +40,32 @@
             <option *ngFor="let r of roles" [value]="r.rolE_ID">{{ r.rolE_NAME
               }}</option>
           </select>
-          <div class="text-danger" *ngIf="role?.invalid && role?.touched">
-            <small *ngIf="role?.errors?.['required']">Role is required</small>
+          <div class="text-danger" *ngIf="rolE_ID?.invalid && rolE_ID?.touched">
+            <small *ngIf="rolE_ID?.errors?.['required']">Role is required</small>
           </div>
         </div>
 
         <div class="mb-2">
           <label class="form-label">Mobile No:</label>
-          <input type="number" formControlName="emP_MOBILE_NO" class="form-control" />
-          <div *ngIf="mobileNo?.invalid && mobileNo?.touched"
+          <input type="number" formControlName="emP_MOBILE_NO"
+            class="form-control" />
+          <div *ngIf="emP_MOBILE_NO?.invalid && emP_MOBILE_NO?.touched"
             class="text-danger small">
-            <div *ngIf="mobileNo?.errors?.['required']">Mobile No is
+            <div *ngIf="emP_MOBILE_NO?.errors?.['required']">Mobile No is
               required</div>
-            <div *ngIf="mobileNo?.errors?.['pattern']">Invalid mobile
+            <div *ngIf="emP_MOBILE_NO?.errors?.['pattern']">Invalid mobile
               number</div>
           </div>
         </div>
 
         <div class="mb-2">
           <label class="form-label">Email:</label>
-          <input type="email" formControlName="emP_EMAIL_ID" class="form-control" />
-          <div *ngIf="email?.invalid && email?.touched"
+          <input type="email" formControlName="emP_EMAIL_ID"
+            class="form-control" />
+          <div *ngIf="emP_EMAIL_ID?.invalid && emP_EMAIL_ID?.touched"
             class="text-danger small">
-            <div *ngIf="email?.errors?.['required']">Email is required</div>
-            <div *ngIf="email?.errors?.['email']">Invalid email format</div>
+            <div *ngIf="emP_EMAIL_ID?.errors?.['required']">emP_EMAIL_ID is required</div>
+            <div *ngIf="emP_EMAIL_ID?.errors?.['email']">Invalid email format</div>
           </div>
         </div>
 
@@ -70,13 +73,13 @@
           <label class="form-label">Password:</label>
           <input type="password" formControlName="emP_PASSWORD"
             class="form-control" />
-          <div *ngIf="password?.invalid && password?.touched"
+          <div *ngIf="emP_PASSWORD?.invalid && emP_PASSWORD?.touched"
             class="text-danger small">
-            <div *ngIf="password?.errors?.['required']">Password is
+            <div *ngIf="emP_PASSWORD?.errors?.['required']">Password is
               required</div>
-            <div *ngIf="password?.errors?.['minlength']">Password must be at
+            <div *ngIf="emP_PASSWORD?.errors?.['minlength']">Password must be at
               least 8 characters</div>
-            <div *ngIf="password?.errors?.['pattern']">
+            <div *ngIf="emP_PASSWORD?.errors?.['pattern']">
               Password must include 1 uppercase letter, 1 number, and 1 special
               character
             </div>
@@ -98,6 +101,9 @@
             <th>Name</th>
             <th>Mobile No</th>
             <th>Email</th>
+            <th>Role</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -105,6 +111,9 @@
             <td>{{ emp.emP_NAME }}</td>
             <td>{{ emp.emP_MOBILE_NO }}</td>
             <td>{{ emp.emP_EMAIL_ID }}</td>
+            <td>{{emp.rolE_NAME}}</td>
+            <td><button class="btn btn.success">Edit</button></td>
+            <td><button class="btn btn.danger">Delete</button></td>
           </tr>
         </tbody>
       </table>

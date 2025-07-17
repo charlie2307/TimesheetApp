@@ -11,6 +11,7 @@ export interface Roles {
 export interface Employee {
   emP_ID: number;
   rolE_ID: number;
+  rolE_NAME:string;
   emP_NAME: string;
   emP_CODE: string;
   emP_MOBILE_NO: number;
@@ -45,7 +46,7 @@ export class EmployeeComponent implements OnInit {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(50),
-          Validators.pattern(/^[a-zA-Z ]+$/)
+          Validators.pattern(/^[a-zA-Z0-9]+$/)
         ]
       ],
       rolE_ID: [
@@ -136,11 +137,11 @@ export class EmployeeComponent implements OnInit {
     }
   }
 
-  get name() { return this.employeeForm.get('emP_NAME'); }
-  get empCode() { return this.employeeForm.get('emP_CODE'); }
-  get role() { return this.employeeForm.get('rolE_ID'); }
-  get mobileNo() { return this.employeeForm.get('emP_MOBILE_NO'); }
-  get email() { return this.employeeForm.get('emP_EMAIL_ID'); }
-  get password() { return this.employeeForm.get('emP_PASSWORD'); }
+  get emP_NAME() { return this.employeeForm.get('emP_NAME'); }
+  get emP_CODE() { return this.employeeForm.get('emP_CODE'); }
+  get rolE_ID() { return this.employeeForm.get('rolE_ID'); }
+  get emP_MOBILE_NO() { return this.employeeForm.get('emP_MOBILE_NO'); }
+  get emP_EMAIL_ID() { return this.employeeForm.get('emP_EMAIL_ID'); }
+  get emP_PASSWORD() { return this.employeeForm.get('emP_PASSWORD'); }
   
 }

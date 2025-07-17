@@ -7,26 +7,52 @@
           <label>Client Name</label>
           <input
             type="text"
-            class="form-control"
+            class="form-control"name
             placeholder="Enter Client Name"
-            formControlName="clientName"
+            formControlName="client_name"
           />
           <div
             class="text-danger"
-            *ngIf="clientName?.invalid && clientName?.touched"
+            *ngIf="client_name?.invalid && client_name?.touched"
           >
-            <small *ngIf="clientName?.errors?.['required']"
+            <small *ngIf="client_name?.errors?.['required']"
               >Module Name is required</small
             >
-            <small *ngIf="clientName?.errors?.['minlength']"
+            <small *ngIf="client_name?.errors?.['minlength']"
               >At least 3 characters</small
             >
-            <small *ngIf="clientName?.errors?.['maxlength']"
+            <small *ngIf="client_name?.errors?.['maxlength']"
               >Maximum 50 characters</small
             >
-            <small *ngIf="clientName?.errors?.['pattern']"
+            <small *ngIf="client_name?.errors?.['pattern']"
               >Only letters and spaces allowed</small
             >
+          </div>
+        </div>
+        <div class="mb-3">
+          <label>Client Code</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Client Code"
+            formControlName="client_code"
+          />
+          <div
+            class="text-danger"
+            *ngIf="client_code?.invalid && client_code?.touched"
+          >
+            <small *ngIf="client_code?.errors?.['required']"
+              >Client Name is required</small
+            >
+            <small *ngIf="client_code?.errors?.['minlength']"
+              >At least 3 characters</small
+            >
+            <small *ngIf="client_code?.errors?.['maxlength']"
+              >Maximum 50 characters</small
+            >
+            <!-- <small *ngIf="client_code?.errors?.['pattern']"
+              >Only letters and spaces allowed</small
+            > -->
           </div>
         </div>
 
@@ -44,12 +70,16 @@
           <tr>
             <th>#</th>
             <th>Module Name</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let client of clients; let i = index">
             <td>{{ i + 1 }}</td>
             <td>{{ client.clienT_NAME }}</td>
+            <td><button class="btn btn.success" (click)="editBtn()">Edit</button></td>
+            <td><button class="btn btn.danger" (click)="deleteBtn()">Delete</button></td>
           </tr>
         </tbody>
       </table>
