@@ -17,21 +17,21 @@ export interface Employee {
 export class AdminService {
 
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   getFunctions(): Observable<any[]> {
     return this.http.get<any[]>("https://localhost:7038/api/Admin/GET_ALL_FUNCTIONS");
   }
   addFunction(functionData: any): Observable<any> {
-    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-FUNCTION",functionData,{ responseType: 'text' as 'json' });
+    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-FUNCTION", functionData, { responseType: 'text' as 'json' });
   }
 
-  
+
   getRoles(): Observable<any[]> {
     return this.http.get<any[]>("https://localhost:7038/api/Admin/GET_ALL_ROLES");
   }
   addRole(roleData: any): Observable<any> {
-    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-ROLE",roleData,{ responseType: 'text' as 'json' });
+    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-ROLE", roleData, { responseType: 'text' as 'json' });
   }
 
 
@@ -39,7 +39,7 @@ export class AdminService {
     return this.http.get<any[]>("https://localhost:7038/api/Admin/GET_ALL_MODULES");
   }
   addModule(moduleData: any): Observable<any> {
-    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-MODULES", moduleData,{ responseType: 'text' as 'json' });
+    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-MODULES", moduleData, { responseType: 'text' as 'json' });
   }
 
 
@@ -47,7 +47,7 @@ export class AdminService {
     return this.http.get<any[]>("https://localhost:7038/api/Admin/GET_ALL_PROJECTS");
   }
   addProject(projectData: any): Observable<any> {
-    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-PROJECT", projectData,{ responseType: 'text' as 'json' });
+    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-PROJECT", projectData, { responseType: 'text' as 'json' });
   }
 
 
@@ -55,7 +55,7 @@ export class AdminService {
     return this.http.get<any[]>("https://localhost:7038/api/Admin/GET_ALL_CLIENT");
   }
   addClient(clientData: any): Observable<any> {
-    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-CLIENT", clientData,{ responseType: 'text' as 'json' });
+    return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-CLIENT", clientData, { responseType: 'text' as 'json' });
   }
 
 
@@ -63,17 +63,29 @@ export class AdminService {
     return this.http.get<any[]>("https://localhost:7038/api/Admin/GET_ALL_EMPLOYEE");
   }
   addEmployee(empData: any): Observable<any> {
-    return this.http.post("https://localhost:7038/api/Admin/INSERT-EMPLOYEE", empData,{ responseType: 'text' as 'json' });
-  } 
+    return this.http.post("https://localhost:7038/api/Admin/INSERT-EMPLOYEE", empData, { responseType: 'text' as 'json' });
+  }
+  updateEmployee(employeeData: any): Observable<any> {
+    return this.http.put<any>('https://localhost:7038/api/Admin/UPDATE_EMPLOYEE', employeeData);
+  }
+  deleteEmployee(empId: number): Observable<any> {
+    return this.http.delete(`https://localhost:7038/api/Admin/DeleteEmployee/${empId}`);
+  }
+  
 
 
-  addTimeslot(timeslotData: any={}): Observable<any> {
-    return this.http.post("https://localhost:7038/api/Admin/INSERT-TIMESLOT", timeslotData,{
+  addTimeslot(timeslotData: any = {}): Observable<any> {
+    return this.http.post("https://localhost:7038/api/Admin/INSERT-TIMESLOT", timeslotData, {
       headers: { 'Content-Type': 'application/json' }
     });
-  } 
+  }
 
-  
+
+  getAllDailyTimesheet(): Observable<any[]> {
+    return this.http.get<any[]>("https://localhost:7038/api/Admin/Get_All_TimeSheet");
+  }
+
+
   // insertEmployee(employee: any): Observable<any> {
   //   return this.http.post(`${this.apiUrl}/INSERT-EMPLOYEE`, employee);
   // }

@@ -7,7 +7,7 @@ import { AdminComponent } from "./admin/admin/admin.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LoginComponent, RouterModule, CommonModule, EmpDashboardComponent, AdminComponent],
+  imports: [RouterOutlet, RouterModule, CommonModule ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

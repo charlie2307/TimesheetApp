@@ -1,1 +1,40 @@
-<p>admin-dashboard works!</p>
+<div class="container-fluid">
+    <div class="row mt-4">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Employee</th>
+                        <th>Timeslot</th>
+                        <th>Hours(Full/Split)</th>
+                        <th>Function</th>
+                        <th>Project & Client</th>
+                        <th>Module</th>
+                        <th>Time From</th>
+                        <th>Time To</th>
+                        <th>Description</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ts of dailyTimesheet; index as i">
+                        <td>{{ ts.timesheeT_DATE }}</td>
+                        <td>{{ ts.emP_NAME }}</td>
+                        <td>{{ ts.timeslot }}</td>
+                        <td>{{ ts.hours }}</td>
+                        <td>{{ ts.proJ_NAME }}</td>
+                        <td>{{ ts.fuN_NAME }}</td>
+                        <td>{{ ts.moD_NAME }}</td>
+                        <td>{{ ts.timE_FROM }}</td>
+                        <td>{{ ts.timE_TO }}</td>
+                        <td>{{ ts.timesheeT_DESC }}</td>
+                        <td>{{ ts.createD_BY }}</td>
+                        <td>{{ ts.createD_DATE }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
