@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface ProjectClient {
+  proJ_ID:number;
   client_code: string;
   proj_name: string;
 }
@@ -34,6 +35,11 @@ GetSlot(): Observable<ProjectClient[]>
 {
 return this.http.get<ProjectClient[]>("https://localhost:7038/api/Admin/Get_All_SlotDetails");
 }
-
-
+SubmitTask(SubmitTask:{}){
+  return this.http.post("https://localhost:7038/api/Employee/Insert_daily_timesheet",SubmitTask);
+}
+GetEmpTasks(empId:number)
+{
+  return this.http.get('https://localhost:7038/api/Employee?employeeId='+empId);
+}
 }

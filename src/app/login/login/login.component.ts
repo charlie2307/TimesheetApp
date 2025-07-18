@@ -54,9 +54,16 @@ export class LoginComponent implements OnInit{
       
       this.authService.login(email, password).subscribe(
         (res: any) => {
-          console.log(res);
+          console.log("hiii "+res);
           if (res.role !== 'admin') {
+              sessionStorage.setItem('EMP_NAME',res.emP_NAME);
+            sessionStorage.setItem('EMP_ID',res.emP_ID);
+            sessionStorage.setItem('EMP_ROLE',res.emP_ROLE);
+            console.log(sessionStorage.getItem('EMP_ROLE'));
+            console.log(sessionStorage.getItem('EMP_ID'));
+            //console.log(sessionStorage.getItem('EMP_NAME'));
             this.router.navigate(['/empDashboard']);
+              
           } else {
             this.error = 'Invalid login attempt';
           }
