@@ -8,23 +8,49 @@
           <input
             type="text"
             class="form-control"
-            formControlName="roleName"
+            formControlName="rolE_NAME"
             placeholder="Enter Role Name"
           />
           <div
             class="text-danger"
-            *ngIf="roleName?.invalid && roleName?.touched"
+            *ngIf="rolE_NAME?.invalid && rolE_NAME?.touched"
           >
-            <small *ngIf="roleName?.errors?.['required']"
+            <small *ngIf="rolE_NAME?.errors?.['required']"
               >Role Name is required</small
             >
-            <small *ngIf="roleName?.errors?.['minlength']"
+            <small *ngIf="rolE_NAME?.errors?.['minlength']"
               >At least 3 characters</small
             >
-            <small *ngIf="roleName?.errors?.['maxlength']"
+            <small *ngIf="rolE_NAME?.errors?.['maxlength']"
               >Maximum 30 characters</small
             >
-            <small *ngIf="roleName?.errors?.['pattern']"
+            <small *ngIf="rolE_NAME?.errors?.['pattern']"
+              >Only letters and spaces allowed</small
+            >
+          </div>
+        </div>
+        <div class="mb-3">
+          <label>Role Code</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="rolE_CODE"
+            placeholder="Enter Role Code"
+          />
+          <div
+            class="text-danger"
+            *ngIf="rolE_CODE?.invalid && rolE_CODE?.touched"
+          >
+            <small *ngIf="rolE_CODE?.errors?.['required']"
+              >Role Name is required</small
+            >
+            <small *ngIf="rolE_CODE?.errors?.['minlength']"
+              >At least 3 characters</small
+            >
+            <small *ngIf="rolE_CODE?.errors?.['maxlength']"
+              >Maximum 30 characters</small
+            >
+            <small *ngIf="rolE_CODE?.errors?.['pattern']"
               >Only letters and spaces allowed</small
             >
           </div>
@@ -45,13 +71,17 @@
             <th>#</th>
             <th>Role Name</th>
             <th>Role Code</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let role of roles; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ role.name }}</td>
-            <td>{{ role.code }}</td>
+            <td>{{ role.rolE_NAME }}</td>
+            <td>{{ role.rolE_CODE }}</td>
+            <td><button class="btn btn-success" (click)="editBtn()">Edit</button></td>
+            <td><button class="btn btn-danger" (click)="deleteBtn()">Delete</button></td>
           </tr>
         </tbody>
       </table>

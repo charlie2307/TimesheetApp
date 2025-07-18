@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-project',
@@ -9,17 +10,16 @@ import { RouterModule } from '@angular/router';
   templateUrl: './project.component.html',
   styleUrl: './project.component.css'
 })
-export class ProjectComponent implements OnInit{
+export class ProjectComponent implements OnInit {
   projectForm!: FormGroup;
+  projects: any[] = [];
+  clients: any[] = [];
 
-  // Example client list for dropdown
-  clients: string[] = ['Client A', 'Client B', 'Client C'];
-
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private adminService: AdminService) { }
 
   ngOnInit() {
     this.projectForm = this.fb.group({
-      projectName: [
+      proJ_NAME: [
         '',
         [
           Validators.required,
@@ -28,35 +28,81 @@ export class ProjectComponent implements OnInit{
           Validators.pattern(/^[A-Za-z0-9\s]+$/),
         ],
       ],
-      projectDescription: [
+      proJ_CODE: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(100),
+          Validators.pattern(/^[A-Za-z0-9\s]+$/),
+        ],
+      ],
+      proJ_DESCRIPTION: [
         '',
         [
           Validators.maxLength(200),
         ],
       ],
-      clientName: ['', Validators.required],
+      clienT_NAME: ['', Validators.required],
     });
+
+    this.adminService.getProjects().subscribe(
+      (data) => {
+        this.projects = data;
+        console.log(data);
+      });
+
+    this.adminService.getClients().subscribe(
+      (data) => {
+        this.clients = data;
+        console.log(data);
+      });
   }
 
-  get projectName() {
-    return this.projectForm.get('projectName');
+  get proJ_NAME() {
+    return this.projectForm.get('proJ_NAME');
   }
 
-  get projectDescription() {
-    return this.projectForm.get('projectDescription');
+  get proJ_DESCRIPTION() {
+    return this.projectForm.get('proJ_DESCRIPTION');
   }
 
-  get clientName() {
-    return this.projectForm.get('clientName');
+  get proJ_CODE() {
+    return this.projectForm.get('proJ_CODE');
   }
 
-  onSubmit() {
-    if (this.projectForm.valid) {
-      console.log(this.projectForm.value);
-      alert('Project added!');
-      this.projectForm.reset();
-    } else {
-      this.projectForm.markAllAsTouched();
+  get clienT_NAME() {
+    return this.projectForm.get('clienT_NAME');
+  }
+
+  onSubmit(): void {
+    if (this.projectForm.invalid) {
+      this.projectForm.markAllAsTouched();  // show validation errors
+      return;
     }
+
+    const projectData = {
+      proJ_CODE: this.projectForm.value.proJ_CODE,
+      proJ_NAME: this.projectForm.value.proJ_NAME,
+      proJ_DESCRIPTION: this.projectForm.value.proJ_DESCRIPTION,
+      clienT_NAME: this.projectForm.value.clienT_NAME
+    };
+    console.log(projectData); 
+    this.adminService.addProject(projectData).subscribe(
+      (response) => {
+        console.log('Project added successfully', response);
+        alert('Project added successfully!');
+        this.projectForm.reset();
+      },
+      (error) => {
+        console.error('Error adding client', error);
+        alert('Something went wrong while adding Project.');
+      }
+    );
   }
+
+  editBtn() { }
+
+  deleteBtn() { }
+
 }

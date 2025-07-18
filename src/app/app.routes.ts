@@ -10,24 +10,22 @@ import { RoleComponent } from "./admin/role/role.component";
 import { EmpDashboardComponent } from "./employee/emp-dashboard/emp-dashboard.component";
 import { LoginComponent } from "./login/login/login.component";
 import { RegisterComponent } from "./login/register/register.component";
-import { ViewEmployeeComponent } from "./admin/employee/view-employee/view-employee.component";
-import { ViewProjectComponent } from "./admin/project/view-project/view-project.component";
 import { TimeslotComponent } from "./admin/timeslot/timeslot.component";
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'empDashboard', component: EmpDashboardComponent },
+    { path: 'empDashboard', component: EmpDashboardComponent 
+        
+    },
     {
         path: 'admin', component: AdminComponent,
         children: [
             { path: '', redirectTo: 'admindashboard', pathMatch: 'full' },
             { path: 'admindashboard', component: AdminDashboardComponent },
             { path: 'employee', component: EmployeeComponent },
-            { path: 'viewEmployee', component: ViewEmployeeComponent },
             { path: 'project', component: ProjectComponent },
-            { path: 'viewProject', component: ViewProjectComponent },
             { path: 'client', component: ClientComponent },
             { path: 'function', component: FunctionComponent },
             { path: 'module', component: ModuleComponent },

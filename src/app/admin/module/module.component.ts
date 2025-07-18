@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AdminComponent } from '../admin/admin.component';
+import { AdminService } from '../../services/admin.service';
 
 interface ModuleEntry {
   moduleName: string;
@@ -8,69 +10,89 @@ interface ModuleEntry {
 }
 @Component({
   selector: 'app-module',
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './module.component.html',
   styleUrl: './module.component.css'
 })
 export class ModuleComponent implements OnInit {
   moduleForm!: FormGroup;
 
-  functions: string[] = [
-    'function1',
-    'function2',
-    'function3'
-  ]; // these could come from a service or API
+  functions: any[] = [];
+  modules: any[] = [];
 
-  addedModules: ModuleEntry[] = [];
-
-constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private adminService: AdminService) { }
 
   ngOnInit() {
     this.moduleForm = this.fb.group({
-      moduleName: [
+      moD_NAME: [
         '',
         [
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(50),
-          Validators.pattern(/^[0-9][A-Za-z\s]+$/)
+          Validators.pattern(/^[A-Za-z0-9\s]+$/)
         ]
       ],
-      function: ['', Validators.required]
+      moD_CODE: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+          Validators.pattern(/^[A-Za-z0-9\s]+$/)
+        ]
+      ],
+      fuN_NAME: ['', Validators.required]
+    });
+
+    this.adminService.getFunctions().subscribe(data => {
+      this.functions = data;
+      console.log(data);
+    });
+
+    this.adminService.getModules().subscribe(data => {
+      this.modules = data;
+      console.log(data);
     });
   }
 
-  get moduleName() {
-    return this.moduleForm.get('moduleName');
+  get moD_NAME() {
+    return this.moduleForm.get('moD_NAME');
   }
 
-  get function() {
-    return this.moduleForm.get('function');
+  get moD_CODE() {
+    return this.moduleForm.get('moD_CODE');
   }
 
-  onSubmit() {
-    if (this.moduleForm.valid) {
-      const entry: ModuleEntry = {
-        moduleName: this.moduleName?.value,
-        function: this.function?.value
-      };
+  get fuN_NAME() {
+    return this.moduleForm.get('fuN_NAME');
+  }
 
-      // prevent duplicates
-      if (
-        this.addedModules.some(
-          f =>
-            f.moduleName.toLowerCase() === entry.moduleName.toLowerCase() &&
-            f.function === entry.function
-        )
-      ) {
-        alert('This function & role combination already exists!');
-        return;
-      }
-
-      this.addedModules.push(entry);
-      this.moduleForm.reset();
-    } else {
-      this.moduleForm.markAllAsTouched();
+  onSubmit():void {
+    if (this.moduleForm.invalid) {
+      this.moduleForm.markAllAsTouched();  // show validation errors
+      return;
     }
+
+    const clientData = {
+      moD_CODE: this.moduleForm.value.moD_CODE, 
+      moD_NAME: this.moduleForm.value.moD_NAME
+    };
+
+    this.adminService.addClient(clientData).subscribe(
+      (response) => {
+        console.log('Module added successfully', response);
+        alert('Module added successfully!');
+        this.moduleForm.reset();  // clear the form
+      },
+      (error) => {
+        console.error('Error adding module', error);
+        alert('Something went wrong while adding module.');
+      }
+    );
   }
+
+  editBtn(){}
+
+  deleteBtn(){}
 }

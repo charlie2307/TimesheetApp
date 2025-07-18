@@ -5,12 +5,20 @@
       <form [formGroup]="timeslotForm" (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label>Select Timeslot</label>
-          <select class="form-select" formControlName="timeslot">
-            <option value="">Select Timeslot</option>
-            <option *ngFor="let slot of timeslots" [value]="slot">{{ slot }}</option>
+          <select class="form-select" formControlName="timeslot1">
+            <option>From</option>
+            <option *ngFor="let h of hours" [value]="h+1">{{h+1}}</option>
           </select>
-          <div class="text-danger" *ngIf="timeslot?.invalid && timeslot?.touched">
-            <small>Timeslot is required</small>
+
+          <select class="form-select" formControlName="timeslot2">
+            <option>To</option>
+            <option *ngFor="let h of hours" [value]="h+1">{{h+1}}</option>
+          </select>
+          <div class="text-danger" *ngIf="timeslot1?.invalid && timeslot1?.touched">
+            <small>Time From is required</small>
+          </div>
+          <div class="text-danger" *ngIf="timeslot2?.invalid && timeslot2?.touched">
+            <small>Time To is required</small>
           </div>
         </div>
 

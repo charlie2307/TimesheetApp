@@ -1,1 +1,92 @@
-<p>client works!</p>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Add Client</h4>
+      <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label>Client Name</label>
+          <input
+            type="text"
+            class="form-control"name
+            placeholder="Enter Client Name"
+            formControlName="client_name"
+          />
+          <div
+            class="text-danger"
+            *ngIf="client_name?.invalid && client_name?.touched"
+          >
+            <small *ngIf="client_name?.errors?.['required']"
+              >Module Name is required</small
+            >
+            <small *ngIf="client_name?.errors?.['minlength']"
+              >At least 3 characters</small
+            >
+            <small *ngIf="client_name?.errors?.['maxlength']"
+              >Maximum 50 characters</small
+            >
+            <small *ngIf="client_name?.errors?.['pattern']"
+              >Only letters and spaces allowed</small
+            >
+          </div>
+        </div>
+        <div class="mb-3">
+          <label>Client Code</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Client Code"
+            formControlName="client_code"
+          />
+          <div
+            class="text-danger"
+            *ngIf="client_code?.invalid && client_code?.touched"
+          >
+            <small *ngIf="client_code?.errors?.['required']"
+              >Client Name is required</small
+            >
+            <small *ngIf="client_code?.errors?.['minlength']"
+              >At least 3 characters</small
+            >
+            <small *ngIf="client_code?.errors?.['maxlength']"
+              >Maximum 50 characters</small
+            >
+            <!-- <small *ngIf="client_code?.errors?.['pattern']"
+              >Only letters and spaces allowed</small
+            > -->
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Client</button>
+      </form>
+    </div>
+
+    <div class="col-md-6">
+      <h4>Added Modules</h4>
+      <table
+        class="table table-bordered table-striped mt-3"
+        *ngIf="clients.length > 0"
+      >
+        <thead class="table-dark">
+          <tr>
+            <th>#</th>
+            <th>Module Name</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let client of clients; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ client.clienT_NAME }}</td>
+            <td><button class="btn btn.success" (click)="editBtn()">Edit</button></td>
+            <td><button class="btn btn.danger" (click)="deleteBtn()">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div *ngIf="clients.length === 0" class="mt-3">
+        <p>No client added yet.</p>
+      </div>
+    </div>
+  </div>
+</div>
