@@ -334,18 +334,12 @@ export class EmpDashboardComponent implements OnInit {
   proJ_ID: number = 0;
   TimeFrom: string = '';
   TimeTO: string = '';
-EmployeeTasks:any[]=[];
+  EmployeeTasks: any[] = [];
 
   SlotDetails: any[] = [];
 
 
-  employeeTimesheet = [
-    { timeslot: '10AM-11AM', function: 'Button1', projectAndClient: 'ProjectList1', module: 'Module1', minute: 15 },
-    { timeslot: '10AM-11AM', function: 'Button2', projectAndClient: 'ProjectList2', module: 'Module2', minute: 20 },
-    { timeslot: '11AM-12AM', function: 'Button3', projectAndClient: 'ProjectList3', module: 'Module3', minute: 30 },
-    { timeslot: '11AM-12AM', function: 'Button4', projectAndClient: 'ProjectList1', module: 'Module2', minute: 10 },
-    { timeslot: '12AM-1PM', function: 'Button1', projectAndClient: 'ProjectList3', module: 'Module1', minute: 25 }
-  ];
+  employeeTimesheet:any[]=[];
 
   groupedTimesheet: { timeslot: string, entries: any[] }[] = [];
 
@@ -353,12 +347,12 @@ EmployeeTasks:any[]=[];
     const map = new Map<string, any[]>();
 
     console.log(sessionStorage.getItem('EMP_ROLE'));
-    this.employeeTimesheet.forEach(entry => {
-      if (!map.has(entry.timeslot)) {
-        map.set(entry.timeslot, []);
-      }
-      map.get(entry.timeslot)?.push(entry);
-    });
+    // this.employeeTimesheet.forEach(entry => {
+    //   if (!map.has(entry.timeslot)) {
+    //     map.set(entry.timeslot, []);
+    //   }
+    //   map.get(entry.timeslot)?.push(entry);
+    // });
 
     this.groupedTimesheet = Array.from(map.entries()).map(([timeslot, entries]) => ({
       timeslot,
@@ -367,9 +361,9 @@ EmployeeTasks:any[]=[];
   }
 
   ngOnInit() {
-  this.checkTaskApproval();
-  this.resetTaskApprovalIfExpired();
-  this.GetEmpTaskData();
+    this.checkTaskApproval();
+    this.resetTaskApprovalIfExpired();
+    this.GetEmpTaskData();
     const timeChange =
       this.currentDateTime = new Date();
     setInterval(() => {
@@ -412,7 +406,7 @@ EmployeeTasks:any[]=[];
     this.timesheet = this.fb.group({
       emP_ID: Number(sessionStorage.getItem('EMP_ID')),
       sloT_ID: 0,
-      hourse: this.timesheetForm.get('type')?.value,
+      hours: this.timesheetForm.get('type')?.value,
       proJ_ID: 0,
       fuN_ID: this.functiondetails,
       moD_ID: 0,
@@ -437,21 +431,21 @@ EmployeeTasks:any[]=[];
     this.checkTaskApproval();
 
 
-    this.taskApproved =Boolean (localStorage.getItem('taskApproved'));
+    this.taskApproved = Boolean(localStorage.getItem('taskApproved'));
   }
 
-GetEmpTaskData()
-{
-  const empId=Number(sessionStorage.getItem('EMP_ID'));
-  this.empService.GetEmpTasks(empId).subscribe(
-    response=>{
-      this.EmployeeTasks=response;
-      console.log(response);
-    },error=>{
-      console.log(error);
-    }
-  );
-}
+  GetEmpTaskData() {
+    const empId = Number(sessionStorage.getItem('EMP_ID'));
+    this.empService.GetEmpTasksdates(empId).subscribe(
+      response => {
+        this.EmployeeTasks = response;
+        // this.EmployeeTasks = this.EmployeeTasks.map(date => date.split('T')[0]);
+        console.log(response);
+      }, error => {
+        console.log(error);
+      }
+    );
+  }
   loadFunctions() {
     this.empService.getFunctions().subscribe(
       (data) => {
@@ -497,20 +491,19 @@ GetEmpTaskData()
     const description = this.timesheetForm.get('description')?.value;
     console.log("Description:", description);
 
-
+    let from = this.timefrom.toString();
+    let to = this.timeto.toString();
 
     let selectedMinute = Number(this.timesheetForm.get('minute')?.value);
 
 
     this.timefrom = this.timeto;
     this.timeto = this.timefrom + selectedMinute;
-    let from = this.timefrom.toString();
-    let to = this.timeto.toString();
+
     this.TimeFrom = from;
     this.TimeTO = to;
     this.timesheet.patchValue({
-      timE_TO: to,
-      timE_FROM: from,
+
       timesheeT_DESC: this.timesheetForm.get('description')?.value,
       sloT_ID: this.slot_id
     });
@@ -519,20 +512,42 @@ GetEmpTaskData()
     this.time = this.time - selectedMinute;
     this.minutes = Array.from({ length: this.time }, (_, i) => i);
     this.timesheet.patchValue({
-      hourse: Number(this.timesheetForm.get('type')?.value)
+      hours: Number(this.timesheetForm.get('type')?.value)
 
     })
+    if (this.timesheet.get('hours')?.value == 1) {
+      if(this.timefrom==0)
+      {
+ this.timesheet.patchValue({
+        timE_TO: '60',
+        timE_FROM: '00'
+      })
+      }
+      else
+        {
+          alert("You Can't Used Full Hours.you already Used Some Minutes.\n Used Slit mode To Select minutes.");
+        }
+     
+    }
+    else {
+      this.timesheet.patchValue({
+        timE_TO: this.timeto,
+        timE_FROM: this.timefrom
+
+      })
+    }
+   
     console.log(this.timesheet.value);
     console.log("---------------------------");
-    if(!taskApproved){
-    this.empService.SubmitTask(this.timesheet.value).subscribe(response => {
-      console.log(response);
-    },
-      error => {
-        console.log(error);
-      });
+    if (!taskApproved) {
+      this.empService.SubmitTask(this.timesheet.value).subscribe(response => {
+        console.log(response);
+      },
+        error => {
+          console.log(error);
+        });
     }
-    else{
+    else {
       alert("You have already approved todays task.!\n Come Tomorrow For Add The Tomorrow Tasks.")
     }
 
@@ -562,6 +577,7 @@ GetEmpTaskData()
   }
   onselectTimeType(e: Event) {
     const confirm = (e.target as HTMLInputElement).value;
+    console.log(confirm);
     if (confirm == '2') {
       this.condition = true;
     }
@@ -571,7 +587,8 @@ GetEmpTaskData()
     if (confirm == '1') {
       this.condition = false;
       this.timesheetForm.patchValue({
-        type: 1
+        type: 1,
+
       })
     }
   }
@@ -609,32 +626,48 @@ GetEmpTaskData()
 
 
   getTodayAndTomorrow10AM() {
-  const now = new Date();
+    const now = new Date();
 
-  const today10AM = new Date();
-  today10AM.setHours(10, 0, 0, 0);
+    const today10AM = new Date();
+    today10AM.setHours(10, 0, 0, 0);
 
-  const tomorrow10AM = new Date(today10AM);
-  tomorrow10AM.setDate(today10AM.getDate() + 1);
+    const tomorrow10AM = new Date(today10AM);
+    tomorrow10AM.setDate(today10AM.getDate() + 1);
 
-  console.log("Today 10AM:", today10AM);
-  console.log("Tomorrow 10AM:", tomorrow10AM);
+    console.log("Today 10AM:", today10AM);
+    console.log("Tomorrow 10AM:", tomorrow10AM);
 
-  return { today10AM, tomorrow10AM };
-}
+    return { today10AM, tomorrow10AM };
 
-resetTaskApprovalIfExpired() {
-  const { tomorrow10AM } = this.getTodayAndTomorrow10AM();
-  const now = new Date();
+  }
 
-  const taskApproved = localStorage.getItem('taskApproved');
-
-  if (taskApproved === 'true' && now >= tomorrow10AM) {
-    console.log("Task approval expired. Resetting...");
-    localStorage.removeItem('taskApproved');
-    localStorage.removeItem('taskApprovalDate');
-    this.taskApproved = false;
+  resetTaskApprovalIfExpired() {
+    // const { tomorrow10AM } = this.getTodayAndTomorrow10AM();
+    const { today10AM } = this.getTodayAndTomorrow10AM();
+    const now = new Date();
+    console.log(now);
+    const taskApproved = Boolean(localStorage.getItem('taskApproved'));
+    console.log("type of true false:" + taskApproved);
+    if (taskApproved === true && now >= today10AM) {
+      console.log("Task approval expired. Resetting...");
+      localStorage.removeItem('taskApproved');
+      localStorage.removeItem('taskApprovalDate');
+      this.taskApproved = false;
+    }
+  }
+  GetEmployeeTask(E:Event)
+  {
+    const selectedDate=(E.target as HTMLInputElement).value;
+    console.log(selectedDate);
+    let emp_id=Number(sessionStorage.getItem('EMP_ID'));
+    this.empService.GetEmpTaskDetails({emp_ID:emp_id,emp_Work_date:selectedDate}).subscribe(response=>{
+      console.log(response);
+      this.employeeTimesheet=response;
+    },error=>{
+      console.log(error);
+    }
+  )
   }
 }
-}
+
 
