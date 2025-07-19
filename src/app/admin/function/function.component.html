@@ -42,7 +42,16 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Add Function</button>
+        <div>
+          <button type="submit" *ngIf="!isEditing" [disabled]="functionForm.invalid"
+            class="btn btn-primary w-100">Register</button>
+        </div>
+        <div>
+          <button type="button" *ngIf="isEditing" [disabled]="functionForm.invalid"
+            class="btn btn-primary w-50 " (click)="updateEmp()">Update</button>
+          <button type="submit" *ngIf="isEditing"
+            class="btn btn-primary w-50 " (click)="resetForm()">Cancel</button>
+        </div>
       </form>
     </div>
 
@@ -57,6 +66,8 @@
             <th>#</th>
             <th>Function Name</th>
             <th>Role</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -64,6 +75,10 @@
             <td>{{ i + 1 }}</td>
             <td>{{ f.fuN_NAME }}</td>
             <td>{{ f.rolE_NAME }}</td>
+            <td><button class="btn btn-success"
+                (click)="editEmp(f)">Edit</button></td>
+            <td><button class="btn btn-danger"
+              (click)="deleteEmp(f.fuN_ID)">Delete</button></td>
           </tr>
         </tbody>
       </table>

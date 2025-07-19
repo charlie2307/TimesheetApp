@@ -14,6 +14,8 @@ export class ProjectComponent implements OnInit {
   projectForm!: FormGroup;
   projects: any[] = [];
   clients: any[] = [];
+  isEditing: boolean = false;
+  editingProjId: number | null = null;
 
   constructor(private fb: FormBuilder, private adminService: AdminService) { }
 
@@ -46,12 +48,20 @@ export class ProjectComponent implements OnInit {
       clienT_NAME: ['', Validators.required],
     });
 
+    this.loadClients();
+    this.loadProjects();
+
+  }
+
+  loadProjects() {
     this.adminService.getProjects().subscribe(
       (data) => {
         this.projects = data;
         console.log(data);
       });
+  }
 
+  loadClients() {
     this.adminService.getClients().subscribe(
       (data) => {
         this.clients = data;
@@ -87,7 +97,7 @@ export class ProjectComponent implements OnInit {
       proJ_DESCRIPTION: this.projectForm.value.proJ_DESCRIPTION,
       clienT_NAME: this.projectForm.value.clienT_NAME
     };
-    console.log(projectData); 
+    console.log(projectData);
     this.adminService.addProject(projectData).subscribe(
       (response) => {
         console.log('Project added successfully', response);
@@ -101,8 +111,65 @@ export class ProjectComponent implements OnInit {
     );
   }
 
-  editBtn() { }
+  updateEmp() {
+    if (this.projectForm.valid) {
 
-  deleteBtn() { }
+      console.log(this.projectForm.value)
 
+      const formData = {
+        MOD_ID: this.editingProjId, // 👈 include employee ID
+        ...this.projectForm.value
+      };
+      console.log('Submitting module:', formData);
+
+
+      this.adminService.updateModule(formData).subscribe({
+        next: (res) => {
+          console.log("hii " + res.message);
+          alert('Module updated successfully!');
+          this.projectForm.reset();
+          this.ngOnInit();
+        },
+        error: (err) => {
+          console.error('Update error:', err);
+          alert('Failed to update module');
+        }
+      });
+      this.projectForm.reset();
+    }
+    else {
+      this.projectForm.markAllAsTouched();
+    }
+  }
+
+  editEmp(proj: any) {
+    this.isEditing = true;
+    this.editingProjId = proj.proJ_ID; // assuming employee has emP_ID
+
+    this.projectForm.patchValue({
+      proJ_NAME: proj.proJ_NAME,
+      clienT_ID: proj.clienT_ID
+    });
+  }
+
+  deleteEmp(funID: number) {
+    if (confirm('Are you sure you want to delete this project?')) {
+      this.adminService.deleteFunction(funID).subscribe({
+        next: (res) => {
+          alert(res);
+          this.loadProjects(); // reload list
+        },
+        error: (err) => {
+          console.error('Delete error:', err);
+          alert('Failed to delete project');
+        }
+      });
+    }
+  }
+
+  resetForm() {
+    this.projectForm.reset();
+    this.isEditing = false;
+    this.editingProjId = null;
+  }
 }

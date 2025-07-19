@@ -92,6 +92,10 @@
             <td>{{ mod.moD_NAME }}</td>
             <td>{{mod.moD_CODE}}</td>
             <td>{{ mod.fuN_NAME }}</td>
+            <td><button class="btn btn-success"
+                (click)="editEmp(mod)">Edit</button></td>
+            <td><button class="btn btn-danger"
+              (click)="deleteEmp(mod.emP_ID)">Delete</button></td>
           </tr>
         </tbody>
       </table>

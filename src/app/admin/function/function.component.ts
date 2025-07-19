@@ -19,7 +19,8 @@ export class FunctionComponent implements OnInit {
   functionForm!: FormGroup;
   functions: any[] = [];
   roles: any[] = [];
-
+  isEditing: boolean = false;
+  editingFunId: number | null = null;
 
   constructor(private fb: FormBuilder, private adminService: AdminService) { }
 
@@ -37,17 +38,23 @@ export class FunctionComponent implements OnInit {
       rolE_NAME: ['', Validators.required]
     });
 
+    this.loadFunctions();
+    this.loadRoles();
+
+    
+  }
+
+  loadFunctions(){
     this.adminService.getFunctions().subscribe(data => {
       this.functions = data;
       console.log(data);
     });
-
+  }
+  loadRoles(){
     this.adminService.getRoles().subscribe(data => {
       this.roles = data;
       console.log(data);
     });
-
-
   }
 
   get fuN_NAME() {
@@ -83,6 +90,8 @@ export class FunctionComponent implements OnInit {
   //     this.functionForm.markAllAsTouched();
   //   }
   // }
+
+
   
   onSubmit(): void {
     if (this.functionForm.valid) {
@@ -119,7 +128,65 @@ export class FunctionComponent implements OnInit {
     }        
   }
 
-  editBtn() { }
+  updateEmp() {
+    if (this.functionForm.valid) {
 
-  deleteBtn() { }
+      console.log(this.functionForm.value)
+
+      const formData = {
+        FUN_ID: this.editingFunId, // 👈 include employee ID
+        ...this.functionForm.value
+      };
+      console.log('Submitting employee:', formData);
+
+
+      this.adminService.updateFunction(formData).subscribe({
+        next: (res) => {
+          console.log("hii " + res.message);
+          alert('Function updated successfully!');
+          this.functionForm.reset();
+          this.ngOnInit();
+        },
+        error: (err) => {
+          console.error('Update error:', err);
+          alert('Failed to update function');
+        }
+      });
+      this.functionForm.reset();
+    }
+    else {
+      this.functionForm.markAllAsTouched();
+    }
+  }
+
+  editEmp(fun: any) {
+    this.isEditing = true;
+    this.editingFunId = fun.funN_ID; // assuming employee has emP_ID
+
+    this.functionForm.patchValue({
+      fuN_NAME: fun.fuN_NAME,
+      rolE_ID: fun.rolE_ID
+    });
+  }
+
+  deleteEmp(funID: number) {
+    if (confirm('Are you sure you want to delete this function?')) {
+      this.adminService.deleteFunction(funID).subscribe({
+        next: (res) => {
+          alert(res);
+          this.loadFunctions(); // reload list
+        },
+        error: (err) => {
+          console.error('Delete error:', err);
+          alert('Failed to delete function');
+        }
+      });
+    }
+  }
+
+  resetForm() {
+    this.functionForm.reset();
+    this.isEditing = false;
+    this.editingFunId = null;
+  }
 }

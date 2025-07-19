@@ -9,6 +9,7 @@ interface Role {
   code: string;
 }
 
+
 @Component({
   selector: 'app-role',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],

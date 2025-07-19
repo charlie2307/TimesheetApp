@@ -389,11 +389,7 @@ export class EmpDashboardComponent implements OnInit {
       }
     });
 
-
-
-
     this.timesheetForm = this.fb.group({
-
       timeslot: [''],
       projectAndClient: [''],
       module: [''],
