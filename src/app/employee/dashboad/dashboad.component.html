@@ -8,7 +8,8 @@
     <div class="row">
         <div class="col">
             <label for="timeslotId" class="m-3">Timeslot:</label>
-            <select id="timeslotId">
+            <select id="timeslotId" formControlName="timeslot"
+                (change)="onfunctionchange($event)">
                 <option selected disabled>--Select timeslot--</option>
                 <option *ngFor="let ts of timeslots"
                     value="{{ts.sloT_ID}}">{{ts.timeslot}}</option>
@@ -16,21 +17,131 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row border">
         <div class="col-2">
             <div class="nav flex-column nav-pills" id="v-pills-tab"
                 role="tablist" aria-orientation="vertical">
                 <button class="nav-link active my-1" data-toggle="pill"
                     data-target="#v-pills-home" role="tab"
-                    (click)="selectFunc(fun.fuN_ID)"
+                    formControlName="function"
                     aria-controls="v-pills-home" *ngFor="let fun of functions"
-                    aria-selected="true" type="button">{{fun.fuN_NAME}}</button>
+                    (click)="onselectfunction($event)"
+                    aria-selected="true" type="button"
+                    value="{{fun.fuN_ID}}">{{fun.fuN_NAME}}</button>
             </div>
         </div>
         <div class="col-10">
+            <div class="row border">
+                <div class="container">
+                    <div class="row mb-3">
+                        <!-- Project & Client -->
+                        <div class="col-md-4">
+                            <label>ClientCode - ProjectName</label>
+                            <select class="form-control"
+                                formControlName="projectAndClient"
+                                (change)="onprojectselect($event)">
+                                <option selected disabled>-- Select Project Name
+                                    --</option>
+                                <option *ngFor="let prod of projectClients"
+                                    [value]="prod.proJ_ID">
+                                    {{ prod.client_code + '-' + prod.proj_name
+                                    }}
+                                </option>
+                            </select>
+                            <div class="text-danger"
+                                *ngIf="timesheetForm.get('projectAndClient')?.invalid && timesheetForm.get('projectAndClient')?.touched">
+                                clientCode-productName is required
+                            </div>
+                        </div>
 
-            <div class="row border p-3 mt-3">
-                <table>
+                        <!-- Modules -->
+                        <div class="col-md-4">
+                            <label>Modules</label>
+                            <select class="form-control"
+                                formControlName="module"
+                                (change)="onselectModule($event)">
+                                <option selected disabled>-- Select Module
+                                    --</option>
+                                <option *ngFor="let module of modules"
+                                    [value]="module.moD_ID">
+                                    {{ module.module }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Time Mode -->
+                        <div class="col-md-4">
+                            <label>Time Mode</label>
+                            <div>
+                                <input type="radio" name="timeType" value="1" class="form-control" formControlName="type"
+                                    (onselect)="onselectTimeType($event)" />
+                                Full
+                                <input type="radio" name="timeType" value="2" class="form-control" formControlName="type"
+                                    (onselect)="onselectTimeType($event)" />
+                                Split
+                            </div>
+                            <!-- <select class="form-control"
+                                formControlName="type"
+                                (change)="onselectTimeType($event)">
+                                <option value [selected]="true">-- Select Mode
+                                    --</option>
+                                <option value="1">Full</option>
+                                <option value="2">Split</option>
+                            </select> -->
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <!-- Time -->
+                        <div class="col-md-4">
+                            <label>Time</label>
+                            <select class="form-control"
+                                formControlName="minute">
+                                <option value disabled>Select Minute</option>
+                                <option *ngFor="let min of minutes"
+                                    [value]="min+1">
+                                    {{ min+1 }} minutes
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-md-8">
+                            <label>Description</label>
+                            <textarea class="form-control"
+                                formControlName="description"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Conditional Time -->
+                    <div class="row mb-3" *ngIf="condition">
+                        <div class="col-md-4">
+                            <label>Time</label>
+                            <select class="form-control"
+                                formControlName="minute">
+                                <option value disabled>Select Minute</option>
+                                <option *ngFor="let min of minutes"
+                                    [value]="min+1">
+                                    {{ min+1 }} minutes
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="row">
+                        <div class="col text-end">
+                            <button class="btn btn-success"
+                                type="submit"
+                                (click)="onSubmit()"
+                                [disabled]="timesheetForm.invalid">
+                                Submit Task
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <table>
                     <tr>
                         <td>
                             <label for>ClientCode - ProjectName</label>
@@ -62,21 +173,44 @@
                                     *ngFor="let module of modules">{{module.module}}</option>
                             </select>
                         </td>
+
+                        <td>
+                            <div class="row">
+                                <label for>Time Mode</label>
+                                <select class="w-100"
+                                    formControlName="type "
+                                    (change)="onselectTimeType($event)">
+
+                                    <option value [selected]="true">--
+                                        Select Module
+                                        --</option>
+                                    <option value="1">Full</option>
+                                    <option value="2">Split</option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <label for>Time</label>
+                                <select class="w-100"
+                                    formControlName="minute">
+                                    <option value disabled>Select
+                                        Minute</option>
+                                    <option *ngFor="let min of minutes"
+                                        [value]="min+1">{{
+                                        min+1
+                                        }} minutes</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td colspan="2">
+                            <button class="btn btn-success"
+                                type="submit"
+                                (click)="onSubmit()"
+                                [disabled]="timesheetForm.invalid">
+                                Submit Task
+                            </button>
+                        </td>
                     </tr>
                     <tr>
-                        <td>
-                            <label for>Time Mode</label>
-                            <select class="w-100"
-                                formControlName="type "
-                                (change)="onselectTimeType($event)">
-
-                                <option value [selected]="true">--
-                                    Select Module
-                                    --</option>
-                                <option value="1">Full</option>
-                                <option value="2">Split</option>
-                            </select>
-                        </td>
                         <td *ngIf="condition">
                             <label for>Time</label>
                             <select class="w-100"
@@ -88,7 +222,6 @@
                                     min+1
                                     }} minutes</option>
                             </select>
-
                         </td>
                         <td>
                             <label for>Description</label>
@@ -96,22 +229,19 @@
                                 formControlName="description"></textarea>
                         </td>
                         <td>
-                            <button class="btn btn-success"
-                                type="submit"
-                                (click)="onSubmit()"
-                                [disabled]="timesheetForm.invalid">
-                                Submit Task
-                            </button>
+
                         </td>
                     </tr>
-                </table>
-            </div>
-
-            <div class="row justify-content-center">
-                <button class="btn btn-success w-25"
-                    (click)="onApproveClick()"
-                    [disabled]="taskApproved">Approved Task</button>
+                </table> -->
             </div>
 
         </div>
+
     </div>
+    <div class="row justify-content-end">
+        <button class="btn btn-success w-25"
+            (click)="onApproveClick()"
+            [disabled]="taskApproved">Approved Task</button>
+    </div>
+
+</div>
