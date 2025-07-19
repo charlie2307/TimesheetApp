@@ -80,38 +80,10 @@
         </table>
     </div>
 
-    <div class="row">
-        <table class="table table-bordered mt-4">
-            <thead>
-                <tr>
-                    <th>Timeslot</th>
-                    <th>Function</th>
-                    <th>Project & Client</th>
-                    <th>Module</th>
-                    <th>Minute</th>
-                </tr>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let group of groupedTimesheet">
-                    <tr *ngFor="let entry of group.entries; let i = index">
-                        <td *ngIf="i === 0" [attr.rowspan]="group.entries.length">{{
-                            group.timeslot }}</td>
-                        <td>{{ entry.function }}</td>
-                        <td>{{ entry.projectAndClient }}</td>
-                        <td>{{ entry.module }}</td>
-                        <td>{{ entry.minute }}</td>
-                    </tr>
-                    <tr>
-
-                    </tr>
-                </ng-container>
-            </tbody>
-        
-        </table>
-
-    </div>
+   
   
     <div class="row justify-content-center">
   <button class="btn btn-success w-25" (click)="onApproveClick()" [disabled]="taskApproved">Approved Task</button>
 </div>
+
 </div>

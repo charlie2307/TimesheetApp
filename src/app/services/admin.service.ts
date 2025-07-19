@@ -69,7 +69,7 @@ export class AdminService {
     return this.http.put<any>('https://localhost:7038/api/Admin/UPDATE_EMPLOYEE', employeeData);
   }
   deleteEmployee(empId: number): Observable<any> {
-    return this.http.delete(`https://localhost:7038/api/Admin/DeleteEmployee/${empId}`);
+    return this.http.delete(`https://localhost:7038/api/Admin/DeleteEmployee/${empId}`,{ responseType: 'text' });
   }
   
 

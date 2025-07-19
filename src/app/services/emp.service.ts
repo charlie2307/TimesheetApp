@@ -38,8 +38,8 @@ return this.http.get<ProjectClient[]>("https://localhost:7038/api/Admin/Get_All_
 SubmitTask(SubmitTask:{}){
   return this.http.post("https://localhost:7038/api/Employee/Insert_daily_timesheet",SubmitTask);
 }
-GetEmpTasks(empId:number)
+GetEmpTasks(empId:number): Observable<ProjectClient[]>
 {
-  return this.http.get('https://localhost:7038/api/Employee?employeeId='+empId);
+  return this.http.get<ProjectClient[]>('https://localhost:7038/api/Employee?employeeId='+empId);
 }
 }

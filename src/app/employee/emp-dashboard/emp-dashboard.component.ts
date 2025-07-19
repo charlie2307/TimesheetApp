@@ -334,7 +334,7 @@ export class EmpDashboardComponent implements OnInit {
   proJ_ID: number = 0;
   TimeFrom: string = '';
   TimeTO: string = '';
-
+EmployeeTasks:any[]=[];
 
   SlotDetails: any[] = [];
 
@@ -445,6 +445,7 @@ GetEmpTaskData()
   const empId=Number(sessionStorage.getItem('EMP_ID'));
   this.empService.GetEmpTasks(empId).subscribe(
     response=>{
+      this.EmployeeTasks=response;
       console.log(response);
     },error=>{
       console.log(error);
