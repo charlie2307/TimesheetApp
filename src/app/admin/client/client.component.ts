@@ -6,7 +6,7 @@ import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-client',
-  imports: [CommonModule,ReactiveFormsModule,RouterOutlet],
+  imports: [CommonModule,ReactiveFormsModule],
   templateUrl: './client.component.html',
   styleUrl: './client.component.css'
 })
@@ -14,6 +14,8 @@ export class ClientComponent {
 
   clientForm!: FormGroup;
   clients:any[]=[];
+  isEditing: boolean = false;
+  editingClientId: number | null = null;
 
   constructor(private fb: FormBuilder,private adminService:AdminService) {}
 
@@ -42,6 +44,15 @@ export class ClientComponent {
     this.loadClient();
   }
 
+  
+
+  get clienT_CODE() {
+    return this.clientForm.get('clienT_CODE');
+  }
+  get clienT_NAME() {
+    return this.clientForm.get('clienT_NAME');
+  }
+
   loadClient(){
     this.adminService.getClients().subscribe(
       (data)=>{
@@ -50,39 +61,109 @@ export class ClientComponent {
       });
   }
 
-  get client_code() {
-    return this.clientForm.get('client_code');
-  }
-  get client_name() {
-    return this.clientForm.get('client_name');
-  }
+  onSubmit() {
+    if (this.clientForm.valid) {
 
-  onSubmit():void {
-    if (this.clientForm.invalid) {
-      this.clientForm.markAllAsTouched();  // show validation errors
-      return;
-    }
+      console.log(this.clientForm.value)
 
-    const clientData = {
-      client_code: this.clientForm.value.client_code, 
-      client_name: this.clientForm.value.client_name
-    };
-
-    this.adminService.addClient(clientData).subscribe(
-      (response) => {
-        console.log('Client added successfully', response);
-        alert('Client added successfully!');
-        this.clientForm.reset();  // clear the form
-      },
-      (error) => {
-        console.error('Error adding client', error);
-        alert('Something went wrong while adding client.');
+      if (this.clientForm.invalid) {
+        this.clientForm.markAllAsTouched();
+        return;
       }
-    );
+
+      const formData = this.clientForm.value;
+      console.log('Submitting client:', formData);
+
+
+      this.adminService.addClient(formData).subscribe({
+        next: (res) => {
+          alert('Client added successfully!');
+          this.clientForm.reset();
+        },
+        error: (err) => {
+          console.error('Registration error:', err);
+          alert('Failed to add client');
+        }
+      });
+
+      // this.adminService.addEmployee(this.employeeForm.value).subscribe(
+      //   (data) => {
+      //     console.log('Form Submitted:', this.employeeForm.value);
+      //     alert('Employee registered successfully!');
+      //     this.employeeForm.reset();
+      //   },
+      //   (err) => {
+      //     this.employeeForm.markAllAsTouched();
+      //     console.error('Registration error:', err);
+      //     alert('Registration failed. Please try again.');
+      //   }
+      // );
+      this.clientForm.reset();
+    } else {
+      this.clientForm.markAllAsTouched();
+    }
   }
 
-  editBtn(){}
+  updateBtn() {
+    if (this.clientForm.valid) {
 
-  deleteBtn(){}
+      console.log(this.clientForm.value)
+
+      const formData = {
+        clienT_ID: this.editingClientId, // 👈 include employee ID
+        ...this.clientForm.value
+      };
+      console.log('Submitting client:', formData);
+
+
+      this.adminService.updateClient(formData).subscribe({
+        next: (res) => {
+          console.log("hii " + res.message);
+          alert('Client updated successfully!');
+          this.clientForm.reset();
+          this.ngOnInit();
+        },
+        error: (err) => {
+          console.error('Update error:', err);
+          alert('Failed to update client');
+        }
+      });
+      this.clientForm.reset();
+    }
+    else {
+      this.clientForm.markAllAsTouched();
+    }
+  }
+
+  editBtn(client: any) {
+    this.isEditing = true;
+    this.editingClientId = client.client_ID; // assuming employee has emP_ID
+
+    this.clientForm.patchValue({
+      clienT_NAME: client.clienT_NAME,
+      clienT_CODE: client.clienT_CODE
+    });
+  }
+
+  deleteBtn(empID: number) {
+    if (confirm('Are you sure you want to delete this employee?')) {
+      this.adminService.deleteClient(empID).subscribe({
+        next: (res) => {
+          alert(res);
+          this.loadClient(); // reload list
+        },
+        error: (err) => {
+          console.error('Delete error:', err);
+          alert('Failed to delete employee');
+        }
+      });
+    }
+  }
+
+  resetForm() {
+    this.clientForm.reset();
+    this.isEditing = false;
+    this.editingClientId = null;
+  }
 
 }

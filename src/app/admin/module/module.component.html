@@ -9,24 +9,18 @@
             type="text"
             class="form-control"
             placeholder="Enter Module Name"
-            formControlName="moD_NAME"
-          />
+            formControlName="moD_NAME" />
           <div
             class="text-danger"
-            *ngIf="moD_NAME?.invalid && moD_NAME?.touched"
-          >
-            <small *ngIf="moD_NAME?.errors?.['required']"
-              >Module Name is required</small
-            >
-            <small *ngIf="moD_NAME?.errors?.['minlength']"
-              >At least 3 characters</small
-            >
-            <small *ngIf="moD_NAME?.errors?.['maxlength']"
-              >Maximum 50 characters</small
-            >
-            <small *ngIf="moD_NAME?.errors?.['pattern']"
-              >Only letters and spaces allowed</small
-            >
+            *ngIf="moD_NAME?.invalid && moD_NAME?.touched">
+            <small *ngIf="moD_NAME?.errors?.['required']">Module Name is
+              required</small>
+            <small *ngIf="moD_NAME?.errors?.['minlength']">At least 3
+              characters</small>
+            <small *ngIf="moD_NAME?.errors?.['maxlength']">Maximum 50
+              characters</small>
+            <small *ngIf="moD_NAME?.errors?.['pattern']">Only letters and spaces
+              allowed</small>
           </div>
         </div>
 
@@ -36,34 +30,30 @@
             type="text"
             class="form-control"
             placeholder="Enter Module Code"
-            formControlName="moD_CODE"
-          />
+            formControlName="moD_CODE" />
           <div
             class="text-danger"
-            *ngIf="moD_CODE?.invalid && moD_CODE?.touched"
-          >
-            <small *ngIf="moD_CODE?.errors?.['required']"
-              >Module Code is required</small
-            >
-            <small *ngIf="moD_CODE?.errors?.['minlength']"
-              >At least 3 characters</small
-            >
-            <small *ngIf="moD_CODE?.errors?.['maxlength']"
-              >Maximum 50 characters</small
-            >
-            <small *ngIf="moD_CODE?.errors?.['pattern']"
-              >Only letters and spaces allowed</small
-            >
+            *ngIf="moD_CODE?.invalid && moD_CODE?.touched">
+            <small *ngIf="moD_CODE?.errors?.['required']">Module Code is
+              required</small>
+            <small *ngIf="moD_CODE?.errors?.['minlength']">At least 3
+              characters</small>
+            <small *ngIf="moD_CODE?.errors?.['maxlength']">Maximum 50
+              characters</small>
+            <small *ngIf="moD_CODE?.errors?.['pattern']">Only letters and spaces
+              allowed</small>
           </div>
         </div>
 
         <div class="mb-3">
           <label>Function</label>
           <select class="form-select" formControlName="fuN_NAME">
-            <option value="">Select Function</option>
-            <option *ngFor="let f of functions" [value]="f.fuN_ID">{{ f.fuN_NAME }}</option>
+            <option value>Select Function</option>
+            <option *ngFor="let f of functions" [value]="f.fuN_ID">{{ f.fuN_NAME
+              }}</option>
           </select>
-          <div class="text-danger" *ngIf="fuN_NAME?.invalid && fuN_NAME?.touched">
+          <div class="text-danger"
+            *ngIf="fuN_NAME?.invalid && fuN_NAME?.touched">
             <small>Function is required</small>
           </div>
         </div>
@@ -76,14 +66,15 @@
       <h4>Added Modules</h4>
       <table
         class="table table-bordered table-striped mt-3"
-        *ngIf="modules.length > 0"
-      >
+        *ngIf="modules.length > 0">
         <thead class="table-dark">
           <tr>
             <th>#</th>
             <th>Module Name</th>
             <th>Module Code</th>
             <th>Function</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -95,7 +86,7 @@
             <td><button class="btn btn-success"
                 (click)="editEmp(mod)">Edit</button></td>
             <td><button class="btn btn-danger"
-              (click)="deleteEmp(mod.emP_ID)">Delete</button></td>
+                (click)="deleteEmp(mod.moD_ID)">Delete</button></td>
           </tr>
         </tbody>
       </table>

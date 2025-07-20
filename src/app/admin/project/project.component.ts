@@ -123,10 +123,10 @@ export class ProjectComponent implements OnInit {
       console.log('Submitting module:', formData);
 
 
-      this.adminService.updateModule(formData).subscribe({
+      this.adminService.updateProject(formData).subscribe({
         next: (res) => {
           console.log("hii " + res.message);
-          alert('Module updated successfully!');
+          alert('Project updated successfully!');
           this.projectForm.reset();
           this.ngOnInit();
         },
@@ -152,9 +152,9 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  deleteEmp(funID: number) {
+  deleteEmp(projID: number) {
     if (confirm('Are you sure you want to delete this project?')) {
-      this.adminService.deleteFunction(funID).subscribe({
+      this.adminService.deleteProject(projID).subscribe({
         next: (res) => {
           alert(res);
           this.loadProjects(); // reload list

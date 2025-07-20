@@ -5,15 +5,7 @@
       <form [formGroup]="timeslotForm" (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label>Select Timeslot</label>
-          <select class="form-select" formControlName="timeslot1">
-            <option>From</option>
-            <option *ngFor="let h of hours" [value]="h+1">{{h+1}}</option>
-          </select>
-
-          <select class="form-select" formControlName="timeslot2">
-            <option>To</option>
-            <option *ngFor="let h of hours" [value]="h+1">{{h+1}}</option>
-          </select>
+          <input type="text" formControlName="timeslot">
           <div class="text-danger" *ngIf="timeslot1?.invalid && timeslot1?.touched">
             <small>Time From is required</small>
           </div>
@@ -33,14 +25,16 @@
           <tr>
             <th>#</th>
             <th>Timeslot</th>
-            <th>Added On</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let slot of addedTimeslots; let i = index">
             <td>{{ i + 1 }}</td>
             <td>{{ slot.timeslot }}</td>
-            <td>{{ slot.timestamp }}</td>
+            <td><button class="btn btn-success" (click)="editBtn(slot)">Edit</button></td>
+            <td><button class="btn btn-danger" (click)="deleteBtn(slot.sloT_ID)">Delete</button></td>
           </tr>
         </tbody>
       </table>

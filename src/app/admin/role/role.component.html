@@ -80,8 +80,8 @@
             <td>{{ i + 1 }}</td>
             <td>{{ role.rolE_NAME }}</td>
             <td>{{ role.rolE_CODE }}</td>
-            <td><button class="btn btn-success" (click)="editBtn()">Edit</button></td>
-            <td><button class="btn btn-danger" (click)="deleteBtn()">Delete</button></td>
+            <td><button class="btn btn-success" (click)="editBtn(role)">Edit</button></td>
+            <td><button class="btn btn-danger" (click)="deleteBtn(role.rolE_ID)">Delete</button></td>
           </tr>
         </tbody>
       </table>

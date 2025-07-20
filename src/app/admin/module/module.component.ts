@@ -134,26 +134,27 @@ export class ModuleComponent implements OnInit {
     }
   }
 
-  editEmp(fun: any) {
+  editEmp(mod: any) {
     this.isEditing = true;
-    this.editingModId = fun.funN_ID; // assuming employee has emP_ID
+    this.editingModId = mod.moD_ID; // assuming employee has emP_ID
 
     this.moduleForm.patchValue({
-      fuN_NAME: fun.fuN_NAME,
-      rolE_ID: fun.rolE_ID
+      moD_NAME: mod.moD_NAME,
+      moD_CODE: mod.moD_CODE,
+      fuN_NAME: mod.fuN_NAME
     });
   }
 
-  deleteEmp(funID: number) {
-    if (confirm('Are you sure you want to delete this function?')) {
-      this.adminService.deleteFunction(funID).subscribe({
+  deleteEmp(modID: number) {
+    if (confirm('Are you sure you want to delete this module?')) {
+      this.adminService.deleteModule(modID).subscribe({
         next: (res) => {
           alert(res);
           this.loadModule(); // reload list
         },
         error: (err) => {
           console.error('Delete error:', err);
-          alert('Failed to delete function');
+          alert('Failed to delete module');
         }
       });
     }
