@@ -319,6 +319,7 @@ export class EmpDashboardComponent implements OnInit {
   condition: boolean = false;
   currentDateTime!: Date;
   today = new Date();
+  newDateTime = new Date();
   modules: any[] = [{}];
   time: number = 60;
   minutes: number[] = [];
@@ -340,6 +341,8 @@ export class EmpDashboardComponent implements OnInit {
 
 
   employeeTimesheet:any[]=[];
+
+  
 
   groupedTimesheet: { timeslot: string, entries: any[] }[] = [];
 
