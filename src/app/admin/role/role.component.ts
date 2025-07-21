@@ -68,25 +68,23 @@ export class RoleComponent implements OnInit {
   updateBtn() {
     if (this.roleForm.valid) {
 
-      console.log(this.roleForm.value)
-
       const formData = {
-        EMP_ID: this.editingRoleId, // 👈 include employee ID
+        rolE_ID: this.editingRoleId, // 👈 include employee ID
         ...this.roleForm.value
       };
-      console.log('Submitting employee:', formData);
+      console.log('Submitting role:', formData);
 
 
-      this.adminService.updateEmployee(formData).subscribe({
+      this.adminService.updateRole(formData).subscribe({
         next: (res) => {
           console.log("hii " + res.message);
-          alert('Employee updated successfully!');
+          alert('Role updated successfully!');
           this.roleForm.reset();
           this.ngOnInit();
         },
         error: (err) => {
           console.error('Update error:', err);
-          alert('Failed to update employee');
+          alert('Failed to update role');
         }
       });
       this.roleForm.reset();

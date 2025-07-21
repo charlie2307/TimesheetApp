@@ -49,17 +49,17 @@ export class ModuleComponent implements OnInit {
 
     this.loadFunctions();
     this.loadModule();
-    
+
   }
 
-  loadModule(){
+  loadModule() {
     this.adminService.getModules().subscribe(data => {
       this.modules = data;
       console.log(data);
     });
   }
 
-  loadFunctions(){
+  loadFunctions() {
     this.adminService.getFunctions().subscribe(data => {
       this.functions = data;
       console.log(data);
@@ -79,14 +79,14 @@ export class ModuleComponent implements OnInit {
     return this.moduleForm.get('fuN_NAME');
   }
 
-  onSubmit():void {
+  onSubmit(): void {
     if (this.moduleForm.invalid) {
       this.moduleForm.markAllAsTouched();  // show validation errors
       return;
     }
 
     const clientData = {
-      moD_CODE: this.moduleForm.value.moD_CODE, 
+      moD_CODE: this.moduleForm.value.moD_CODE,
       moD_NAME: this.moduleForm.value.moD_NAME
     };
 
@@ -103,7 +103,7 @@ export class ModuleComponent implements OnInit {
     );
   }
 
-  updateEmp() {
+  updateBtn() {
     if (this.moduleForm.valid) {
 
       console.log(this.moduleForm.value)
@@ -138,10 +138,14 @@ export class ModuleComponent implements OnInit {
     this.isEditing = true;
     this.editingModId = mod.moD_ID; // assuming employee has emP_ID
 
+    const funcId = mod.fuN_ID
+      ? mod.fuN_ID
+      : this.functions.find(f => f.fuN_NAME === mod.fuN_NAME)?.fuN_ID;
+
     this.moduleForm.patchValue({
       moD_NAME: mod.moD_NAME,
       moD_CODE: mod.moD_CODE,
-      fuN_NAME: mod.fuN_NAME
+      fuN_NAME: funcId || ''
     });
   }
 

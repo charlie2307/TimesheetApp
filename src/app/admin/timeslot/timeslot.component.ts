@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { AdminService } from '../../services/admin.service';
 
 interface TimeslotEntry {
-  sloT_ID:number;
+  sloT_ID: number;
   timeslot: string;
 }
 
@@ -29,19 +29,22 @@ export class TimeslotComponent implements OnInit {
 
   ngOnInit() {
     this.timeslotForm = this.fb.group({
-      timeslot1: ['', Validators.required],
-      timeslot2: ['', Validators.required],
+      timeslot: [
+        '',
+        [Validators.required, Validators.pattern(/^\d{2}-\d{2}$/)]
+      ]
     });
 
+    this.loadRoles();
     this.hours = Array.from({ length: this.time }, (_, i) => i);
   }
 
-  get timeslot1() {
-    return this.timeslotForm.get('timeslot1');
+  get timeslot() {
+    return this.timeslotForm.get('timeslot');
   }
-  get timeslot2() {
-    return this.timeslotForm.get('timeslot2');
-  }
+  // get timeslot2() {
+  //   return this.timeslotForm.get('timeslot2');
+  // }
 
   // onSubmit():void {
   //   if (this.timeslotForm.invalid) {
@@ -79,31 +82,29 @@ export class TimeslotComponent implements OnInit {
   updateBtn() {
     if (this.timeslotForm.valid) {
 
-      console.log(this.timeslotForm.value)
+      console.log("timeslotForm: "+ this.timeslotForm.value(["timeslot"]))
 
-      const data = this.timeslotForm.value.timeslot1 + "-" + this.timeslotForm.value.timeslot2;
-      const timeslot = {
-        timeslot: data
-      };
-      console.log(timeslot);
-
+      // const data = this.timeslotForm.value;
+      // const timeslot = {
+      //   timeslot: data
+      // };
+      
       const formData = {
-        EMP_ID: this.editingTimeslotId, // 👈 include employee ID
+        sloT_ID: this.editingTimeslotId, // 👈 include employee ID
         ...this.timeslotForm.value
       };
-      console.log('Submitting employee:', formData);
+      console.log('Submitting timeslot:', formData);
 
 
-      this.adminService.updateEmployee(formData).subscribe({
+      this.adminService.updateTimeslot(formData).subscribe({
         next: (res) => {
-          console.log("hii " + res.message);
-          alert('Employee updated successfully!');
+          alert('Timeslot updated successfully!');
           this.timeslotForm.reset();
           this.ngOnInit();
         },
         error: (err) => {
           console.error('Update error:', err);
-          alert('Failed to update employee');
+          alert('Failed to update timeslot');
         }
       });
       this.timeslotForm.reset();
@@ -149,7 +150,7 @@ export class TimeslotComponent implements OnInit {
     this.editingTimeslotId = slot.sloT_ID;
 
     this.timeslotForm.patchValue({
-      timeslot:slot.timeslot
+      timeslot: slot.timeslot
     });
   }
 
