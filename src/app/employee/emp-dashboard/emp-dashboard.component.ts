@@ -415,7 +415,7 @@ export class EmpDashboardComponent implements OnInit {
       createD_BY: sessionStorage.getItem('EMP_NAME')
     })
 
-
+this.getslotminutes();
 
     this.loadFunctions();
     this.loadProjects();
@@ -591,6 +591,7 @@ export class EmpDashboardComponent implements OnInit {
   }
   onfunctionchage(e: Event) {
     this.slot_id = Number((e.target as HTMLInputElement).value);
+    this.getslotminutes();
   }
 
   onApproveClick(): void {
@@ -663,6 +664,16 @@ export class EmpDashboardComponent implements OnInit {
       console.log(error);
     }
     )
+  }
+  getslotminutes()
+  {
+    this.empService.GETMINUTES({slotDate:'2025-07-21',emP_ID:Number(sessionStorage.getItem('EMP_ID')),sloT_ID:1}).subscribe(response=>{
+    
+      console.log(response)
+    },error=>{
+      console.log(error);
+    }
+  )
   }
 }
 

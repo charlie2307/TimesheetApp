@@ -46,4 +46,8 @@ GetEmpTaskDetails(empdetails:{}): Observable<ProjectClient[]>
 {
   return this.http.post<ProjectClient[]>("https://localhost:7038/api/Employee/GetEmployee_Work_details_by_dateAnd_Id",empdetails);
 }
+GETMINUTES(empoyeedetails:{}): Observable<ProjectClient[]>
+{
+  return this.http.post<ProjectClient[]>("https://localhost:7038/api/Employee/GetMinutes",empoyeedetails);
+}
 }
