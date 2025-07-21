@@ -137,7 +137,7 @@ export class ClientComponent {
 
   editBtn(client: any) {
     this.isEditing = true;
-    this.editingClientId = client.client_ID; // assuming employee has emP_ID
+    this.editingClientId = client.client_ID;
 
     this.clientForm.patchValue({
       clienT_NAME: client.clienT_NAME,
@@ -145,16 +145,16 @@ export class ClientComponent {
     });
   }
 
-  deleteBtn(empID: number) {
-    if (confirm('Are you sure you want to delete this employee?')) {
-      this.adminService.deleteClient(empID).subscribe({
+  deleteBtn(ID: number) {
+    if (confirm('Are you sure you want to delete this client?')) {
+      this.adminService.deleteClient(ID).subscribe({
         next: (res) => {
           alert(res);
           this.loadClient(); // reload list
         },
         error: (err) => {
           console.error('Delete error:', err);
-          alert('Failed to delete employee');
+          alert('Failed to delete client');
         }
       });
     }

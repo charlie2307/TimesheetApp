@@ -39,7 +39,7 @@ export class ProjectComponent implements OnInit {
           Validators.pattern(/^[A-Za-z0-9\s]+$/),
         ],
       ],
-      proJ_DESCRIPTION: [
+      proJ_DESC: [
         '',
         [
           Validators.maxLength(200),
@@ -73,8 +73,8 @@ export class ProjectComponent implements OnInit {
     return this.projectForm.get('proJ_NAME');
   }
 
-  get proJ_DESCRIPTION() {
-    return this.projectForm.get('proJ_DESCRIPTION');
+  get proJ_DESC() {
+    return this.projectForm.get('proJ_DESC');
   }
 
   get proJ_CODE() {
@@ -94,7 +94,7 @@ export class ProjectComponent implements OnInit {
     const projectData = {
       proJ_CODE: this.projectForm.value.proJ_CODE,
       proJ_NAME: this.projectForm.value.proJ_NAME,
-      proJ_DESCRIPTION: this.projectForm.value.proJ_DESCRIPTION,
+      proJ_DESC: this.projectForm.value.proJ_DESC,
       clienT_NAME: this.projectForm.value.clienT_NAME
     };
     console.log(projectData);
@@ -117,7 +117,7 @@ export class ProjectComponent implements OnInit {
       console.log(this.projectForm.value)
 
       const formData = {
-        MOD_ID: this.editingProjId, // 👈 include employee ID
+        proJ_ID: this.editingProjId, // 👈 include employee ID
         ...this.projectForm.value
       };
       console.log('Submitting module:', formData);
@@ -146,10 +146,23 @@ export class ProjectComponent implements OnInit {
     this.isEditing = true;
     this.editingProjId = proj.proJ_ID; // assuming employee has emP_ID
 
+    const clientId = proj.clienT_ID
+      ? proj.clienT_ID
+      : this.clients.find(f => f.clienT_NAME === proj.clienT_NAME)?.clienT_ID;
+
     this.projectForm.patchValue({
       proJ_NAME: proj.proJ_NAME,
-      clienT_ID: proj.clienT_ID
+      proJ_CODE:proj.proJ_CODE,
+      proJ_DESC:proj.proJ_DESC,
+      clienT_NAME: clientId || ''
     });
+
+    // this.projectForm.patchValue({
+    //   proJ_NAME: proj.proJ_NAME,
+    //   proJ_CODE:proj.proJ_CODE,
+    //   proJ_DESC:proj.proJ_DESC,
+    //   clienT_ID: proj.clienT_ID
+    // });
   }
 
   deleteEmp(projID: number) {
