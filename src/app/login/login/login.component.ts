@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit{
     const password = this.loginForm.value.pass;
     
 
-    if (email === 'admin123@gmail.com' && password === 'admin123') {
+    if (sessionStorage.getItem('role')==='admin') {
       window.location.href = '/admin';
 
       // this.authService.login(email, password).subscribe(
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit{
             console.log(sessionStorage.getItem('EMP_ROLE'));
             console.log(sessionStorage.getItem('EMP_ID'));
             //console.log(sessionStorage.getItem('EMP_NAME'));
-            this.router.navigate(['/empDashboard']);
+            this.router.navigate(['/dashboard']);
               
           } else {
             this.error = 'Invalid login attempt';

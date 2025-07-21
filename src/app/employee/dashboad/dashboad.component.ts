@@ -47,6 +47,10 @@ export class DashboadComponent implements OnInit {
   TimeFrom: string = '';
   TimeTO: string = '';
   EmployeeTasks: any[] = [];
+  selectedFunctionId: number = 0;
+  isSlotSelected = false;
+  isFunSelected = false;
+  isProjectSelected = false;
 
   SlotDetails: any[] = [];
 
@@ -85,9 +89,6 @@ export class DashboadComponent implements OnInit {
       }
     });
 
-
-
-
     this.timesheetForm = this.fb.group({
 
       timeslot: [''],
@@ -116,6 +117,7 @@ export class DashboadComponent implements OnInit {
 
     this.loadFunctions();
     this.loadProjects();
+    this.loadTimeslots();
 
 
     this.empService.GetSlot().subscribe(response => {
@@ -144,9 +146,11 @@ export class DashboadComponent implements OnInit {
       }
     );
   }
+
+
   loadFunctions() {
     this.empService.getFunctions().subscribe(
-      data=> {
+      data => {
         this.functions = data;
         console.log(data);
       }
@@ -154,9 +158,9 @@ export class DashboadComponent implements OnInit {
   }
   onprojectselect(E: Event) {
     this.proJ_ID = Number((E.target as HTMLInputElement).value);
+    this.isProjectSelected = true;
     this.timesheet.patchValue({
       proJ_ID: this.proJ_ID
-
     })
     console.log(this.proJ_ID);
 
@@ -171,6 +175,17 @@ export class DashboadComponent implements OnInit {
         console.error(error)
       });
   }
+  loadTimeslots() {
+    this.empService.GetSlot().subscribe(
+      (data) => {
+        this.timeslots = data;
+        console.log("Timeslots: " + data);
+      },
+      (error) => {
+        console.error(error);
+      }
+    )
+  }
 
   onButtonClick(button: string) {
     this.timesheetForm.patchValue({ functionBtn: button });
@@ -182,6 +197,10 @@ export class DashboadComponent implements OnInit {
   timeto = 0;
 
   onSubmit() {
+    this.isSlotSelected = true;
+    this.isFunSelected = true;
+    this.isProjectSelected = false;
+
     const taskApproved = Boolean(localStorage.getItem('taskApproved'));
     const description = this.timesheetForm.get('description')?.value;
     console.log("Description:", description);
@@ -252,9 +271,11 @@ export class DashboadComponent implements OnInit {
     this.moduleId = Number((e.target as HTMLInputElement).value);
     console.log(this.moduleId);
   }
+
   onselectfunction(e: Event) {
     const index = +(e.target as HTMLSelectElement).value;
     const selectedFunc = this.functions[index];
+
     this.functiondetails = selectedFunc.fuN_ID;
     console.log("Selected Name:", selectedFunc.fuN_NAME);
     console.log("Selected ID:", selectedFunc.fuN_ID);
@@ -267,7 +288,15 @@ export class DashboadComponent implements OnInit {
       error => {
         console.log(error);
       });
+    this.selectedFunctionId = selectedFunc.fuN_ID;
+    this.isFunSelected = true;
+    this.isProjectSelected = false;
+    this.timesheetForm.get('projectAndClient')?.reset();
+    this.timesheetForm.get('module')?.reset();
+    this.timesheetForm.get('minute')?.reset();
+    this.timesheetForm.get('description')?.reset();
   }
+
   onselectTimeType(e: Event) {
     const confirm = (e.target as HTMLInputElement).value;
     console.log(confirm);
@@ -287,6 +316,15 @@ export class DashboadComponent implements OnInit {
   }
   onfunctionchange(e: Event) {
     this.slot_id = Number((e.target as HTMLInputElement).value);
+    this.isSlotSelected = true;
+    this.isFunSelected = false;
+    this.isProjectSelected = false;
+    this.selectedFunctionId = 0;
+    this.timesheetForm.get('function')?.reset();
+    this.timesheetForm.get('projectAndClient')?.reset();
+    this.timesheetForm.get('module')?.reset();
+    this.timesheetForm.get('minute')?.reset();
+    this.timesheetForm.get('description')?.reset();
   }
 
   onApproveClick(): void {
