@@ -340,7 +340,7 @@ export class EmpDashboardComponent implements OnInit {
   SlotDetails: any[] = [];
 
 
-  employeeTimesheet:any[]=[];
+  employeeTimesheet: any[] = [];
 
   
 
@@ -392,11 +392,7 @@ export class EmpDashboardComponent implements OnInit {
       }
     });
 
-
-
-
     this.timesheetForm = this.fb.group({
-
       timeslot: [''],
       projectAndClient: [''],
       module: [''],
@@ -519,18 +515,16 @@ export class EmpDashboardComponent implements OnInit {
 
     })
     if (this.timesheet.get('hours')?.value == 1) {
-      if(this.timefrom==0)
-      {
- this.timesheet.patchValue({
-        timE_TO: '60',
-        timE_FROM: '00'
-      })
+      if (this.timefrom == 0) {
+        this.timesheet.patchValue({
+          timE_TO: '60',
+          timE_FROM: '00'
+        })
       }
-      else
-        {
-          alert("You Can't Used Full Hours.you already Used Some Minutes.\n Used Slit mode To Select minutes.");
-        }
-     
+      else {
+        alert("You Can't Used Full Hours.you already Used Some Minutes.\n Used Slit mode To Select minutes.");
+      }
+
     }
     else {
       this.timesheet.patchValue({
@@ -539,7 +533,7 @@ export class EmpDashboardComponent implements OnInit {
 
       })
     }
-   
+
     console.log(this.timesheet.value);
     console.log("---------------------------");
     if (!taskApproved) {
@@ -658,18 +652,17 @@ export class EmpDashboardComponent implements OnInit {
       this.taskApproved = false;
     }
   }
-  GetEmployeeTask(E:Event)
-  {
-    const selectedDate=(E.target as HTMLInputElement).value;
+  GetEmployeeTask(E: Event) {
+    const selectedDate = (E.target as HTMLInputElement).value;
     console.log(selectedDate);
-    let emp_id=Number(sessionStorage.getItem('EMP_ID'));
-    this.empService.GetEmpTaskDetails({emp_ID:emp_id,emp_Work_date:selectedDate}).subscribe(response=>{
+    let emp_id = Number(sessionStorage.getItem('EMP_ID'));
+    this.empService.GetEmpTaskDetails({ emp_ID: emp_id, emp_Work_date: selectedDate }).subscribe(response => {
       console.log(response);
-      this.employeeTimesheet=response;
-    },error=>{
+      this.employeeTimesheet = response;
+    }, error => {
       console.log(error);
     }
-  )
+    )
   }
 }
 

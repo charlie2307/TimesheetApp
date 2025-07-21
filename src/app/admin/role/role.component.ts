@@ -9,6 +9,7 @@ interface Role {
   code: string;
 }
 
+
 @Component({
   selector: 'app-role',
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
@@ -19,6 +20,8 @@ export class RoleComponent implements OnInit {
   roleForm!: FormGroup;
   roles: any[] = [];
   private roleCounter: number = 0;
+  isEditing: boolean = false;
+  editingRoleId: number | null = null;
 
   constructor(private fb: FormBuilder,private adminService:AdminService) { }
 
@@ -44,11 +47,7 @@ export class RoleComponent implements OnInit {
       ],
     });
 
-    this.adminService.getRoles().subscribe(
-      (data)=>{
-        this.roles=data;
-        console.log(data);
-      });
+    this.loadRoles()
   }
 
   get rolE_NAME() {
@@ -58,48 +57,102 @@ export class RoleComponent implements OnInit {
     return this.roleForm.get('rolE_CODE');
   }
 
-  // onSubmit() {
-  //   if (this.roleForm.valid) {
-  //     const name: string = this.roleForm.value.roleName.trim();
-
-  //     // Auto-generate role code
-  //     const prefix = name.substring(0, 3).toLowerCase();
-  //     this.roleCounter++;
-  //     const numberPart = this.roleCounter.toString().padStart(3, '0');
-  //     const code = prefix + numberPart;
-
-  //     this.roles.push({ name, code });
-  //     this.roleForm.reset();
-  //   } else {
-  //     this.roleForm.markAllAsTouched();
-  //   }
-  // }
-
-  onSubmit():void {
-    if (this.roleForm.invalid) {
-      this.roleForm.markAllAsTouched();  // show validation errors
-      return;
-    }
-
-    const clientData = {
-      rolE_CODE: this.roleForm.value.rolE_CODE, 
-      rolE_NAME: this.roleForm.value.rolE_NAME
-    };
-
-    this.adminService.addRole(clientData).subscribe(
-      (response) => {
-        console.log('Role added successfully', response);
-        alert('Role added successfully!');
-        this.roleForm.reset();  // clear the form
-      },
-      (error) => {
-        console.error('Error adding role', error);
-        alert('Something went wrong while adding role.');
-      }
-    );
+  loadRoles() {
+    this.adminService.getRoles().subscribe(
+      (data) => {
+        this.roles = data;
+        console.log(data);
+      });
   }
 
-  editBtn(){}
+  updateBtn() {
+    if (this.roleForm.valid) {
 
-  deleteBtn(){}
+      const formData = {
+        rolE_ID: this.editingRoleId, // 👈 include employee ID
+        ...this.roleForm.value
+      };
+      console.log('Submitting role:', formData);
+
+
+      this.adminService.updateRole(formData).subscribe({
+        next: (res) => {
+          console.log("hii " + res.message);
+          alert('Role updated successfully!');
+          this.roleForm.reset();
+          this.ngOnInit();
+        },
+        error: (err) => {
+          console.error('Update error:', err);
+          alert('Failed to update role');
+        }
+      });
+      this.roleForm.reset();
+    }
+    else {
+      this.roleForm.markAllAsTouched();
+    }
+  }
+
+  onSubmit() {
+    if (this.roleForm.valid) {
+
+      console.log(this.roleForm.value)
+
+      if (this.roleForm.invalid) {
+        this.roleForm.markAllAsTouched();
+        return;
+      }
+
+      const formData = this.roleForm.value;
+      console.log('Submitting role:', formData);
+
+
+      this.adminService.addEmployee(formData).subscribe({
+        next: (res) => {
+          alert('Role added successfully!');
+          this.roleForm.reset();
+        },
+        error: (err) => {
+          console.error('Registration error:', err);
+          alert('Failed to add role');
+        }
+      });
+
+      this.roleForm.reset();
+    } else {
+      this.roleForm.markAllAsTouched();
+    }
+  }
+
+  editBtn(role: any) {
+    this.isEditing = true;
+    this.editingRoleId = role.rolE_ID; 
+
+    this.roleForm.patchValue({
+      rolE_NAME:role.rolE_NAME,
+      rolE_CODE:role.rolE_CODE
+    });
+  }
+
+  deleteBtn(ID: number) {
+    if (confirm('Are you sure you want to delete this role?')) {
+      this.adminService.deleteRole(ID).subscribe({
+        next: (res) => {
+          alert(res);
+          this.loadRoles(); // reload list
+        },
+        error: (err) => {
+          console.error('Delete error:', err);
+          alert('Failed to delete role');
+        }
+      });
+    }
+  }
+
+  resetForm() {
+    this.roleForm.reset();
+    this.isEditing = false;
+    this.editingRoleId = null;
+  }
 }

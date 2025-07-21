@@ -19,6 +19,8 @@ export class ModuleComponent implements OnInit {
 
   functions: any[] = [];
   modules: any[] = [];
+  isEditing: boolean = false;
+  editingModId: number | null = null;
 
   constructor(private fb: FormBuilder, private adminService: AdminService) { }
 
@@ -45,16 +47,25 @@ export class ModuleComponent implements OnInit {
       fuN_NAME: ['', Validators.required]
     });
 
-    this.adminService.getFunctions().subscribe(data => {
-      this.functions = data;
-      console.log(data);
-    });
+    this.loadFunctions();
+    this.loadModule();
 
+  }
+
+  loadModule() {
     this.adminService.getModules().subscribe(data => {
       this.modules = data;
       console.log(data);
     });
   }
+
+  loadFunctions() {
+    this.adminService.getFunctions().subscribe(data => {
+      this.functions = data;
+      console.log(data);
+    });
+  }
+
 
   get moD_NAME() {
     return this.moduleForm.get('moD_NAME');
@@ -68,14 +79,14 @@ export class ModuleComponent implements OnInit {
     return this.moduleForm.get('fuN_NAME');
   }
 
-  onSubmit():void {
+  onSubmit(): void {
     if (this.moduleForm.invalid) {
       this.moduleForm.markAllAsTouched();  // show validation errors
       return;
     }
 
     const clientData = {
-      moD_CODE: this.moduleForm.value.moD_CODE, 
+      moD_CODE: this.moduleForm.value.moD_CODE,
       moD_NAME: this.moduleForm.value.moD_NAME
     };
 
@@ -92,7 +103,70 @@ export class ModuleComponent implements OnInit {
     );
   }
 
-  editBtn(){}
+  updateBtn() {
+    if (this.moduleForm.valid) {
 
-  deleteBtn(){}
+      console.log(this.moduleForm.value)
+
+      const formData = {
+        MOD_ID: this.editingModId, // 👈 include employee ID
+        ...this.moduleForm.value
+      };
+      console.log('Submitting module:', formData);
+
+
+      this.adminService.updateModule(formData).subscribe({
+        next: (res) => {
+          console.log("hii " + res.message);
+          alert('Module updated successfully!');
+          this.moduleForm.reset();
+          this.ngOnInit();
+        },
+        error: (err) => {
+          console.error('Update error:', err);
+          alert('Failed to update module');
+        }
+      });
+      this.moduleForm.reset();
+    }
+    else {
+      this.moduleForm.markAllAsTouched();
+    }
+  }
+
+  editEmp(mod: any) {
+    this.isEditing = true;
+    this.editingModId = mod.moD_ID; // assuming employee has emP_ID
+
+    const funcId = mod.fuN_ID
+      ? mod.fuN_ID
+      : this.functions.find(f => f.fuN_NAME === mod.fuN_NAME)?.fuN_ID;
+
+    this.moduleForm.patchValue({
+      moD_NAME: mod.moD_NAME,
+      moD_CODE: mod.moD_CODE,
+      fuN_NAME: funcId || ''
+    });
+  }
+
+  deleteEmp(modID: number) {
+    if (confirm('Are you sure you want to delete this module?')) {
+      this.adminService.deleteModule(modID).subscribe({
+        next: (res) => {
+          alert(res);
+          this.loadModule(); // reload list
+        },
+        error: (err) => {
+          console.error('Delete error:', err);
+          alert('Failed to delete module');
+        }
+      });
+    }
+  }
+
+  resetForm() {
+    this.moduleForm.reset();
+    this.isEditing = false;
+    this.editingModId = null;
+  }
 }

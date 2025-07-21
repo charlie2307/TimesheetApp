@@ -25,6 +25,12 @@ export class AdminService {
   addFunction(functionData: any): Observable<any> {
     return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-FUNCTION", functionData, { responseType: 'text' as 'json' });
   }
+  updateFunction(functionData: any): Observable<any> {
+    return this.http.put<any>('https://localhost:7038/api/Admin/UPDATE_FUNCTIONS', functionData);
+  }
+  deleteFunction(ID: number): Observable<any> {
+    return this.http.delete(`https://localhost:7038/api/Admin/DeleteFunction/${ID}`,{ responseType: 'text' });
+  }
 
 
   getRoles(): Observable<any[]> {
@@ -32,6 +38,12 @@ export class AdminService {
   }
   addRole(roleData: any): Observable<any> {
     return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-ROLE", roleData, { responseType: 'text' as 'json' });
+  }
+  updateRole(roleData: any): Observable<any> {
+    return this.http.put<any>('https://localhost:7038/api/Admin/UPDATE_ROLES', roleData);
+  }
+  deleteRole(ID: number): Observable<any> {
+    return this.http.delete(`https://localhost:7038/api/Admin/DeleteRole/${ID}`,{ responseType: 'text' });
   }
 
 
@@ -41,6 +53,12 @@ export class AdminService {
   addModule(moduleData: any): Observable<any> {
     return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-MODULES", moduleData, { responseType: 'text' as 'json' });
   }
+  updateModule(moduleData: any): Observable<any> {
+    return this.http.put<any>('https://localhost:7038/api/Admin/UPDATE_MODULES', moduleData);
+  }
+  deleteModule(ID: number): Observable<any> {
+    return this.http.delete(`https://localhost:7038/api/Admin/DeleteModule/${ID}`,{ responseType: 'text' });
+  }
 
 
   getProjects(): Observable<any[]> {
@@ -49,6 +67,12 @@ export class AdminService {
   addProject(projectData: any): Observable<any> {
     return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-PROJECT", projectData, { responseType: 'text' as 'json' });
   }
+  updateProject(projectData: any): Observable<any> {
+    return this.http.put<any>('https://localhost:7038/api/Admin/UPDATE_PROJECT', projectData);
+  }
+  deleteProject(ID: number): Observable<any> {
+    return this.http.delete(`https://localhost:7038/api/Admin/DeleteProject/${ID}`,{ responseType: 'text' });
+  }
 
 
   getClients(): Observable<any[]> {
@@ -56,6 +80,12 @@ export class AdminService {
   }
   addClient(clientData: any): Observable<any> {
     return this.http.post<any>("https://localhost:7038/api/Admin/INSERT-CLIENT", clientData, { responseType: 'text' as 'json' });
+  }
+  updateClient(clientData: any): Observable<any> {
+    return this.http.put<any>('https://localhost:7038/api/Admin/UPDATE_CLIENT', clientData);
+  }
+  deleteClient(ID: number): Observable<any> {
+    return this.http.delete(`https://localhost:7038/api/Admin/DeleteClient/${ID}`,{ responseType: 'text' });
   }
 
 
@@ -68,58 +98,33 @@ export class AdminService {
   updateEmployee(employeeData: any): Observable<any> {
     return this.http.put<any>('https://localhost:7038/api/Admin/UPDATE_EMPLOYEE', employeeData);
   }
-  deleteEmployee(empId: number): Observable<any> {
-    return this.http.delete(`https://localhost:7038/api/Admin/DeleteEmployee/${empId}`,{ responseType: 'text' });
+  deleteEmployee(ID: number): Observable<any> {
+    return this.http.delete(`https://localhost:7038/api/Admin/DeleteEmployee/${ID}`,{ responseType: 'text' });
+  }  
+
+
+  getTimeslots(): Observable<any[]> {
+    return this.http.get<any[]>("https://localhost:7038/api/Admin/GET_ALL_TIMESLOT");
   }
-  
-
-
   addTimeslot(timeslotData: any = {}): Observable<any> {
     return this.http.post("https://localhost:7038/api/Admin/INSERT-TIMESLOT", timeslotData, {
       headers: { 'Content-Type': 'application/json' }
     });
   }
+  updateTimeslot(timeslotData: any): Observable<any> {
+    return this.http.put<any>('https://localhost:7038/api/Admin/UPDATE_TIMESLOT', timeslotData);
+  }
+  deleteTimeslot(ID: number): Observable<any> {
+    return this.http.delete(`https://localhost:7038/api/Admin/DeleteTimeslot/${ID}`,{ responseType: 'text' });
+  }  
 
 
   getAllDailyTimesheet(): Observable<any[]> {
     return this.http.get<any[]>("https://localhost:7038/api/Admin/Get_All_TimeSheet");
   }
 
-
   // insertEmployee(employee: any): Observable<any> {
   //   return this.http.post(`${this.apiUrl}/INSERT-EMPLOYEE`, employee);
   // }
-
-
-
-
-
-  // registerManager(managerData: any): Observable<any> {
-  //   return this.http.post<any>(this.managerUrl + "register", managerData);
-  // }
-
-  // registerManagerByAdmin(managerData: any): Observable<any> {
-  //   return this.http.post<any>(this.managerUrl + "registerByAdmin", managerData);
-  // }
-
-  // getManagers(): Observable<any[]> {
-  //   return this.http.get<any[]>(this.managerUrl + "get");
-  // }
-
-  // updateManager(manager: any): Observable<any> {
-  //   return this.http.put<any>(`${this.managerUrl}update/${manager.mId}`, manager);
-  // }
-
-
-  // getManagerById(mId: any): Observable<any> {
-  //   console.log(mId);
-
-  //   return this.http.get<any>(this.managerUrl + `getById/${mId}`);
-  // }
-
-  // deleteManager(mId: number): Observable<any> {
-  //   return this.http.delete(this.managerUrl + `delete/${mId}`);
-  // }
-
 
 }

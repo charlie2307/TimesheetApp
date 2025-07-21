@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin',
-  imports: [RouterOutlet, AdminSidebarComponent, NavbarComponent,RouterModule,CommonModule],
+  imports: [RouterOutlet, AdminSidebarComponent,RouterModule,CommonModule],
   templateUrl: './admin.component.html',
   styleUrl: './admin.component.css'
 })

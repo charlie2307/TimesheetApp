@@ -11,14 +11,19 @@ import { EmpDashboardComponent } from "./employee/emp-dashboard/emp-dashboard.co
 import { LoginComponent } from "./login/login/login.component";
 import { RegisterComponent } from "./login/register/register.component";
 import { TimeslotComponent } from "./admin/timeslot/timeslot.component";
+import { DashboadComponent } from "./employee/dashboad/dashboad.component";
+import { TimesheetComponent } from "./employee/timesheet/timesheet.component";
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
-    { path: 'empDashboard', component: EmpDashboardComponent 
-        
-    },
+    { path: 'empDashboard', component: EmpDashboardComponent },
+    { path: 'dashboard', component: DashboadComponent,
+        children:[
+            {path:'timesheet', component:TimesheetComponent}
+        ]
+     },
     {
         path: 'admin', component: AdminComponent,
         children: [

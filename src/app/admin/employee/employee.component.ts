@@ -83,7 +83,7 @@ export class EmployeeComponent implements OnInit {
   ngOnInit(): void {
 
 
-    
+
 
     this.adminService.getRoles().subscribe(
       (data) => {
@@ -94,7 +94,7 @@ export class EmployeeComponent implements OnInit {
     this.loadEmployees();
   }
 
-  loadEmployees(){
+  loadEmployees() {
     this.adminService.getEmployees().subscribe(
       (data) => {
         this.employees = data;
@@ -108,15 +108,15 @@ export class EmployeeComponent implements OnInit {
       console.log(this.employeeForm.value)
 
       const formData = {
-      EMP_ID: this.editingEmpId, // 👈 include employee ID
-      ...this.employeeForm.value
-    };
+        EMP_ID: this.editingEmpId, // 👈 include employee ID
+        ...this.employeeForm.value
+      };
       console.log('Submitting employee:', formData);
 
 
       this.adminService.updateEmployee(formData).subscribe({
         next: (res) => {
-          console.log("hii "+res.message);
+          console.log("hii " + res.message);
           alert('Employee updated successfully!');
           this.employeeForm.reset();
           this.ngOnInit();
@@ -190,19 +190,19 @@ export class EmployeeComponent implements OnInit {
     });
   }
 
-  deleteEmp(empID: number){
+  deleteEmp(empID: number) {
     if (confirm('Are you sure you want to delete this employee?')) {
-    this.adminService.deleteEmployee(empID).subscribe({
-      next: (res) => {
-        alert(res);
-        this.loadEmployees(); // reload list
-      },
-      error: (err) => {
-        console.error('Delete error:', err);
-        alert('Failed to delete employee');
-      }
-    });
-  }
+      this.adminService.deleteEmployee(empID).subscribe({
+        next: (res) => {
+          alert(res);
+          this.loadEmployees(); // reload list
+        },
+        error: (err) => {
+          console.error('Delete error:', err);
+          alert('Failed to delete employee');
+        }
+      });
+    }
   }
 
   resetForm() {
