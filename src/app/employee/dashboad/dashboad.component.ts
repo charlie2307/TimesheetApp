@@ -26,377 +26,241 @@ export interface ProjectClient {
 export class DashboadComponent implements OnInit {
   timeslots: any[] = [];
   functions: any[] = [];
-  projects: any[] = [];
   projectClients: ProjectClient[] = [];
-  moduleId: number = 0;
-  taskApproved: boolean = false;
-  condition: boolean = false;
-  currentDateTime!: Date;
-  today = new Date();
-  modules: any[] = [{}];
-  time: number = 60;
-  minutes: number[] = [];
-  selectedMinute: number | null = null;
-  timesheetForm!: FormGroup;
-  isActiveBtn: boolean = false;
-  selectedFunc: string = '';
-  functiondetails: string = ''
-  timesheet!: FormGroup;
-  slot_id: number = 0;
-  proJ_ID: number = 0;
-  TimeFrom: string = '';
-  TimeTO: string = '';
+  modules: any[] = [];
+  employeeTimesheet: any[] = [];
+
+  SlotDetails: any[] = [];
   EmployeeTasks: any[] = [];
-  selectedFunctionId: number = 0;
+
+  minutes: number[] = [];
+  time = 60;
+
+  currentDateTime = new Date();
+
   isSlotSelected = false;
   isFunSelected = false;
   isProjectSelected = false;
 
-  SlotDetails: any[] = [];
+  selectedFunctionId: number = 0;
+  selectedFunc: string = '';
+  moduleId: number = 0;
+  proJ_ID: number = 0;
 
-  employeeTimesheet: any[] = [];
+  taskApproved = false;
+  condition = false;
 
-  constructor(private fb: FormBuilder, private empService: EmpService, private router: Router) {
-    console.log(sessionStorage.getItem('EMP_ROLE'));
+  timesheetForm!: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private empService: EmpService,
+    private router: Router
+  ) {
+
   }
 
   ngOnInit(): void {
-    this.checkTaskApproval();
-    this.resetTaskApprovalIfExpired();
-    this.GetEmpTaskData();
-    const timeChange =
-      this.currentDateTime = new Date();
-    setInterval(() => {
-      this.currentDateTime = new Date();
-    }, 1000);
-
-    this.minutes = Array.from({ length: this.time }, (_, i) => i);
-
-    this.timesheetForm = this.fb.group({
-      type: ['', Validators.required],
-      minute: [{ value: '', disabled: true }, Validators.required],
-      projectAndClient: ['', Validators.required]
-    });
-
-
-    this.timesheetForm.get('type')?.valueChanges.subscribe(value => {
-      const minuteControl = this.timesheetForm.get('minute');
-      if (value === 'Full') {
-        minuteControl?.disable();
-        minuteControl?.reset(); // optionally clear value
-      } else if (value === 'Split') {
-        minuteControl?.enable();
-      }
-    });
-
-    this.timesheetForm = this.fb.group({
-
-      timeslot: [''],
-      projectAndClient: [''],
-      module: [''],
-      type: 0,
-      minute: [''],
-      functionBtn: this.selectedFunc,
-      description: ['']
-    });
-
-    this.timesheet = this.fb.group({
-      emP_ID: Number(sessionStorage.getItem('EMP_ID')),
-      sloT_ID: 0,
-      hourse: this.timesheetForm.get('type')?.value,
-      proJ_ID: 0,
-      fuN_ID: this.functiondetails,
-      moD_ID: 0,
-      timE_FROM: this.TimeFrom,
-      timE_TO: this.TimeTO,
-      timesheeT_DESC: this.timesheetForm.get('description')?.value,
-      createD_BY: sessionStorage.getItem('EMP_NAME')
-    })
-
-
-
+    this.loadTimeslots();
     this.loadFunctions();
     this.loadProjects();
-    this.loadTimeslots();
+    this.GetEmpTaskData();
 
+    this.minutes = Array.from({ length: this.time }, (_, i) => i);
+    setInterval(() => this.currentDateTime = new Date(), 1000);
 
-    this.empService.GetSlot().subscribe(response => {
-      this.SlotDetails = response;
-      console.log(this.SlotDetails);
-    }, error => {
-      console.log(error);
+    this.initForm();
+
+    this.SlotDetails = [];
+    this.checkTaskApproval();
+    this.resetTaskApprovalIfExpired();
+  }
+
+  initForm() {
+    this.timesheetForm = this.fb.group({
+      timeslot: ['', Validators.required],
+      functionBtn: [''],
+      projectAndClient: ['', Validators.required],
+      module: ['', Validators.required],
+      type: [0, Validators.required],
+      minute: [''],
+      description: ['']
+    });
+  }
+
+  loadTimeslots() {
+    this.empService.GetSlot().subscribe(data => {
+      this.timeslots = data
+      console.log(data)
     }
     );
-    this.checkTaskApproval();
+  }
 
+  loadFunctions() {
+    this.empService.getFunctions().subscribe(data => this.functions = data);
+  }
 
-    this.taskApproved = Boolean(localStorage.getItem('taskApproved'));
-
+  loadProjects() {
+    this.empService.getProjectsWithClients().subscribe(data => this.projectClients = data);
   }
 
   GetEmpTaskData() {
     const empId = Number(sessionStorage.getItem('EMP_ID'));
-    this.empService.GetEmpTasksdates(empId).subscribe(
-      response => {
-        this.EmployeeTasks = response;
-        // this.EmployeeTasks = this.EmployeeTasks.map(date => date.split('T')[0]);
-        console.log(response);
-      }, error => {
-        console.log(error);
-      }
-    );
+    this.empService.GetEmpTasksdates(empId).subscribe(data => this.EmployeeTasks = data);
   }
 
+  onfunctionchange(event: Event) {
 
-  loadFunctions() {
-    this.empService.getFunctions().subscribe(
-      data => {
-        this.functions = data;
-        console.log(data);
-      }
-    );
-  }
-  onprojectselect(E: Event) {
-    this.proJ_ID = Number((E.target as HTMLInputElement).value);
-    this.isProjectSelected = true;
-    this.timesheet.patchValue({
-      proJ_ID: this.proJ_ID
-    })
-    console.log(this.proJ_ID);
-
-  }
-  loadProjects() {
-    this.empService.getProjectsWithClients().subscribe(
-      (data) => {
-        this.projectClients = data;
-        console.log(data);
-      },
-      (error) => {
-        console.error(error)
-      });
-  }
-  loadTimeslots() {
-    this.empService.GetSlot().subscribe(
-      (data) => {
-        this.timeslots = data;
-        console.log("Timeslots: " + data);
-      },
-      (error) => {
-        console.error(error);
-      }
-    )
-  }
-
-  onButtonClick(button: string) {
-    this.timesheetForm.patchValue({ functionBtn: button });
-    this.selectedFunc = button;
-  }
-
-
-  timefrom = 0;
-  timeto = 0;
-
-  onSubmit() {
-    this.isSlotSelected = true;
-    this.isFunSelected = true;
-    this.isProjectSelected = false;
-
-    const taskApproved = Boolean(localStorage.getItem('taskApproved'));
-    const description = this.timesheetForm.get('description')?.value;
-    console.log("Description:", description);
-
-    let from = this.timefrom.toString();
-    let to = this.timeto.toString();
-
-    let selectedMinute = Number(this.timesheetForm.get('minute')?.value);
-
-
-    this.timefrom = this.timeto;
-    this.timeto = this.timefrom + selectedMinute;
-
-    this.TimeFrom = from;
-    this.TimeTO = to;
-    this.timesheet.patchValue({
-
-      timesheeT_DESC: this.timesheetForm.get('description')?.value,
-      sloT_ID: this.slot_id
-    });
-
-
-    this.time = this.time - selectedMinute;
-    this.minutes = Array.from({ length: this.time }, (_, i) => i);
-    this.timesheet.patchValue({
-      hours: Number(this.timesheetForm.get('type')?.value)
-
-    })
-    if (this.timesheet.get('hours')?.value == 1) {
-      if (this.timefrom == 0) {
-        this.timesheet.patchValue({
-          timE_TO: '60',
-          timE_FROM: '00'
-        })
-      }
-      else {
-        alert("You Can't Used Full Hours.you already Used Some Minutes.\n Used Slit mode To Select minutes.");
-      }
-
-    }
-    else {
-      this.timesheet.patchValue({
-        timE_TO: this.timeto,
-        timE_FROM: this.timefrom
-
-      })
-    }
-
-    console.log(this.timesheet.value);
-    console.log("---------------------------");
-    if (!taskApproved) {
-      this.empService.SubmitTask(this.timesheet.value).subscribe(response => {
-        console.log(response);
-      },
-        error => {
-          console.log(error);
-        });
-    }
-    else {
-      alert("You have already approved todays task.!\n Come Tomorrow For Add The Tomorrow Tasks.")
-    }
-
-  }
-  onselectModule(e: Event) {
-    this.timesheet.patchValue({
-      moD_ID: Number((e.target as HTMLInputElement).value)
-    })
-    this.moduleId = Number((e.target as HTMLInputElement).value);
-    console.log(this.moduleId);
-  }
-
-  onselectfunction(e: Event) {
-    const index = +(e.target as HTMLSelectElement).value;
-    const selectedFunc = this.functions[index];
-
-    this.functiondetails = selectedFunc.fuN_ID;
-    console.log("Selected Name:", selectedFunc.fuN_NAME);
-    console.log("Selected ID:", selectedFunc.fuN_ID);
-    this.timesheet.patchValue({
-      fuN_ID: selectedFunc.fuN_ID
-    })
-    this.empService.getModules(selectedFunc.fuN_NAME).subscribe(resp => {
-      this.modules = resp;
-    },
-      error => {
-        console.log(error);
-      });
-    this.selectedFunctionId = selectedFunc.fuN_ID;
-    this.isFunSelected = true;
-    this.isProjectSelected = false;
-    this.timesheetForm.get('projectAndClient')?.reset();
-    this.timesheetForm.get('module')?.reset();
-    this.timesheetForm.get('minute')?.reset();
-    this.timesheetForm.get('description')?.reset();
-  }
-
-  onselectTimeType(e: Event) {
-    const confirm = (e.target as HTMLInputElement).value;
-    console.log(confirm);
-    if (confirm == '2') {
-      this.condition = true;
-    }
-    this.timesheetForm.patchValue({
-      type: 2
-    })
-    if (confirm == '1') {
-      this.condition = false;
-      this.timesheetForm.patchValue({
-        type: 1,
-
-      })
-    }
-  }
-  onfunctionchange(e: Event) {
-    this.slot_id = Number((e.target as HTMLInputElement).value);
     this.isSlotSelected = true;
     this.isFunSelected = false;
     this.isProjectSelected = false;
+
     this.selectedFunctionId = 0;
-    this.timesheetForm.get('function')?.reset();
+    this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
+  }
+
+  onselectfunction(fun: any) {
+    this.selectedFunctionId = fun.fuN_ID;
+    this.isFunSelected = true;
+    this.isProjectSelected = false;
+
+
+    this.timesheetForm.patchValue({ functionBtn: fun.fuN_NAME });
+
+    // this.empService.getModules(fun.fuN_ID).subscribe(resp => this.modules = resp);
+    this.empService.getModules(fun.fuN_ID).subscribe(
+      (data) => {
+        this.modules = data;
+      }
+    )
     this.timesheetForm.get('projectAndClient')?.reset();
     this.timesheetForm.get('module')?.reset();
     this.timesheetForm.get('minute')?.reset();
     this.timesheetForm.get('description')?.reset();
   }
 
-  onApproveClick(): void {
-    const currentDate = new Date();
-    const currentHour = currentDate.getHours();
-    const todayDate = currentDate.toISOString().split('T')[0];
+  onprojectselect(event: Event) {
+    this.proJ_ID = Number((event.target as HTMLSelectElement).value);
+    this.isProjectSelected = true;
+  }
 
+  onselectModule(event: Event) {
+    this.moduleId = Number((event.target as HTMLSelectElement).value);
+  }
 
-    if (currentHour >= 10) {
-      localStorage.setItem('taskApproved', 'true');
-      localStorage.setItem('taskApprovalDate', todayDate);
-      this.checkTaskApproval();
-      alert('Task Approved for today!');
-    } else {
-      alert('You can approve the task only after 10 AM.');
+  onselectTimeType(event: Event) {
+    const type = (event.target as HTMLInputElement).value;
+    // this.condition = type === '2';
+    this.timesheetForm.patchValue({ type: Number(type) });
+
+    if (type === '2') { // Split
+      this.condition = true;
+
+      this.timesheetForm.get('minute')?.setValidators(Validators.required);
+      this.timesheetForm.get('minute')?.updateValueAndValidity();
+
+      this.timesheetForm.patchValue({ type: 2 });
+      console.log("Type:"+this.timesheetForm.get('type')?.value);
+
+    } else if (type === '1') { // Full
+      this.condition = false;
+
+      this.timesheetForm.get('minute')?.clearValidators();
+      this.timesheetForm.get('minute')?.setValue(null); // optional: reset
+      this.timesheetForm.get('minute')?.updateValueAndValidity();
+
+      this.timesheetForm.patchValue({ type: 1 });
+      console.log(this.timesheetForm.get('type')?.value);
     }
   }
-  checkTaskApproval(): void {
-    const todayDate = new Date().toISOString().split('T')[0];
-    const taskApproved = localStorage.getItem('taskApproved');
-    const taskApprovalDate = localStorage.getItem('taskApprovalDate');
 
+  onSubmit() {
+    if (this.taskApproved) {
+      alert("Task already approved for today.");
+      return;
+    }
 
-    if (taskApproved && taskApproved === 'true' && taskApprovalDate === todayDate) {
-      this.taskApproved = true;
+    if (this.timesheetForm.invalid) {
+      this.timesheetForm.markAllAsTouched();
+      return;
+    }
+
+    this.isFunSelected = false;
+    const payload = {
+      emP_ID: Number(sessionStorage.getItem('EMP_ID')),
+      sloT_ID: Number(this.timesheetForm.get('timeslot')?.value),
+      fuN_ID: this.selectedFunctionId,
+      proJ_ID: this.proJ_ID,
+      moD_ID: this.moduleId,
+      hours: this.timesheetForm.get('type')?.value,
+      timE_FROM: '00',
+      timE_TO: '60',
+      timesheeT_DESC: this.timesheetForm.get('description')?.value,
+      createD_BY: sessionStorage.getItem('EMP_NAME')
+    };
+
+    console.log(payload);
+    this.empService.SubmitTask(payload).subscribe(
+      () => {
+        alert("Task submitted successfully.");
+        this.isProjectSelected = false;  // go back to function step
+        this.timesheetForm.patchValue({
+          projectAndClient: '',
+          module: '',
+          type: 0,
+          minute: '',
+          description: ''
+        });
+      },
+      error => console.error(error)
+    );
+  }
+
+  onApproveClick() {
+    const now = new Date();
+    if (now.getHours() >= 10) {
+      const today = now.toISOString().split('T')[0];
+      localStorage.setItem('taskApproved', 'true');
+      localStorage.setItem('taskApprovalDate', today);
+      this.checkTaskApproval();
+      alert("Task approved for today.");
     } else {
+      alert("You can approve task only after 10AM.");
+    }
+  }
+
+  checkTaskApproval() {
+    const today = new Date().toISOString().split('T')[0];
+    const approved = localStorage.getItem('taskApproved');
+    const approvalDate = localStorage.getItem('taskApprovalDate');
+    this.taskApproved = approved === 'true' && approvalDate === today;
+  }
+
+  resetTaskApprovalIfExpired() {
+    const { tomorrow10AM } = this.getTodayAndTomorrow10AM();
+    const now = new Date();
+    if (now >= tomorrow10AM) {
+      localStorage.removeItem('taskApproved');
+      localStorage.removeItem('taskApprovalDate');
       this.taskApproved = false;
     }
   }
 
-
   getTodayAndTomorrow10AM() {
-    const now = new Date();
-
     const today10AM = new Date();
     today10AM.setHours(10, 0, 0, 0);
 
     const tomorrow10AM = new Date(today10AM);
     tomorrow10AM.setDate(today10AM.getDate() + 1);
 
-    console.log("Today 10AM:", today10AM);
-    console.log("Tomorrow 10AM:", tomorrow10AM);
-
     return { today10AM, tomorrow10AM };
-
   }
 
-  resetTaskApprovalIfExpired() {
-    // const { tomorrow10AM } = this.getTodayAndTomorrow10AM();
-    const { today10AM } = this.getTodayAndTomorrow10AM();
-    const now = new Date();
-    console.log(now);
-    const taskApproved = Boolean(localStorage.getItem('taskApproved'));
-    console.log("type of true false:" + taskApproved);
-    if (taskApproved === true && now >= today10AM) {
-      console.log("Task approval expired. Resetting...");
-      localStorage.removeItem('taskApproved');
-      localStorage.removeItem('taskApprovalDate');
-      this.taskApproved = false;
-    }
+  GetEmployeeTask(event: Event) {
+    const selectedDate = (event.target as HTMLInputElement).value;
+    const empId = Number(sessionStorage.getItem('EMP_ID'));
+    this.empService.GetEmpTaskDetails({ emp_ID: empId, emp_Work_date: selectedDate }).subscribe(
+      data => this.employeeTimesheet = data
+    );
   }
-  GetEmployeeTask(E: Event) {
-    const selectedDate = (E.target as HTMLInputElement).value;
-    console.log(selectedDate);
-    let emp_id = Number(sessionStorage.getItem('EMP_ID'));
-    this.empService.GetEmpTaskDetails({ emp_ID: emp_id, emp_Work_date: selectedDate }).subscribe(response => {
-      console.log(response);
-      this.employeeTimesheet = response;
-    }, error => {
-      console.log(error);
-    }
-    )
-  }
-
 }
