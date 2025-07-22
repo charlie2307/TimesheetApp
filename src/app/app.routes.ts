@@ -19,11 +19,8 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'empDashboard', component: EmpDashboardComponent },
-    { path: 'dashboard', component: DashboadComponent,
-        children:[
-            {path:'timesheet', component:TimesheetComponent}
-        ]
-     },
+    { path: 'dashboard', component: DashboadComponent },
+    { path:'timesheet', component:TimesheetComponent },
     {
         path: 'admin', component: AdminComponent,
         children: [

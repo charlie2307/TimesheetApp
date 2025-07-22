@@ -142,6 +142,11 @@ export class DashboadComponent implements OnInit {
   onprojectselect(event: Event) {
     this.proJ_ID = Number((event.target as HTMLSelectElement).value);
     this.isProjectSelected = true;
+    if(this.modules.length===0)
+    {
+      this.timesheetForm.get('module')?.setValidators(Validators.required);
+      this.timesheetForm.get('module')?.updateValueAndValidity();
+    }    
   }
 
   onselectModule(event: Event) {
