@@ -10,7 +10,7 @@
                     <label for="timeslot">Timeslot</label>
                     <select id="timeslot" class="w-100 mh-3"
                         formControlName="timeslot"
-                        (change)="onfunctionchage($event)">
+                        (change)="onfunctionchange($event)">
                         
                         <option value="{{data.sloT_ID}}"
                             *ngFor="let data of SlotDetails">{{data.sloT_NAME}}</option>

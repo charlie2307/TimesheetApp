@@ -313,7 +313,10 @@ import { errorContext } from 'rxjs/internal/util/errorContext';
   templateUrl: './emp-dashboard.component.html',
   styleUrl: './emp-dashboard.component.css'
 })
+
+
 export class EmpDashboardComponent implements OnInit {
+  
   moduleId: number = 0;
   taskApproved: boolean = false;
   condition: boolean = false;
@@ -364,9 +367,15 @@ export class EmpDashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.checkTaskApproval();
     this.resetTaskApprovalIfExpired();
     this.GetEmpTaskData();
+const storedData = sessionStorage.getItem('employeefun');
+if (storedData) {
+  this.functions = JSON.parse(storedData);
+  console.log('Function list from sessionStorage:', this.functions);
+}
     const timeChange =
       this.currentDateTime = new Date();
     setInterval(() => {
@@ -415,7 +424,7 @@ export class EmpDashboardComponent implements OnInit {
       createD_BY: sessionStorage.getItem('EMP_NAME')
     })
 
-this.getslotminutes();
+
 
     this.loadFunctions();
     this.loadProjects();
@@ -576,6 +585,7 @@ this.getslotminutes();
     const confirm = (e.target as HTMLInputElement).value;
     console.log(confirm);
     if (confirm == '2') {
+      this.getslotminutes();
       this.condition = true;
     }
     this.timesheetForm.patchValue({
@@ -589,7 +599,7 @@ this.getslotminutes();
       })
     }
   }
-  onfunctionchage(e: Event) {
+  onfunctionchange(e: Event) {
     this.slot_id = Number((e.target as HTMLInputElement).value);
     this.getslotminutes();
   }
@@ -667,7 +677,25 @@ this.getslotminutes();
   }
   getslotminutes()
   {
-    this.empService.GETMINUTES({slotDate:'2025-07-21',emP_ID:Number(sessionStorage.getItem('EMP_ID')),sloT_ID:1}).subscribe(response=>{
+//     const {today10AM}=this.getTodayAndTomorrow10AM();
+   
+// const fullDate = new Date(today10AM); // original datetime
+// const approvalDate = new Date(fullDate.getDate());
+// console.log("HIIII");
+// console.log(approvalDate); 
+ const now = new Date();
+
+    const today10AM = new Date();
+    today10AM.setHours(10, 0, 0, 0);
+
+    const tomorrow10AM = new Date(today10AM);
+    tomorrow10AM.setDate(today10AM.getDate() + 1);
+
+    console.log("Today 10AM:", today10AM);
+    console.log("Tomorrow 10AM:", tomorrow10AM);
+
+   
+    this.empService.GETMINUTES({slotDate:today10AM,emP_ID:Number(sessionStorage.getItem('EMP_ID')),sloT_ID:this.slot_id}).subscribe(response=>{
     
       console.log(response)
     },error=>{

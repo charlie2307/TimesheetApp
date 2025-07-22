@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
+
 })
 export class AuthService {
 
@@ -19,7 +20,7 @@ export class AuthService {
 //     });
 //   }
 
-  login(email: string, password: string) {
+  login(email: string, password: string){
     return this.http.post(`https://localhost:7038/api/Employee/TimeSheet_Login`, { email, password });
   }
 

@@ -12,12 +12,13 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
+
 export class LoginComponent implements OnInit{
   loginForm!: FormGroup;
   email = '';
   password = '';
   error: string = '';
-
+employeefunction:any[]=[]
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +38,8 @@ export class LoginComponent implements OnInit{
   login(): void {
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.pass;
-    
+    console.log(email);
+    console.log(password);
 
     if (sessionStorage.getItem('role')==='admin') {
       window.location.href = '/admin';
@@ -54,7 +56,13 @@ export class LoginComponent implements OnInit{
       
       this.authService.login(email, password).subscribe(
         (res: any) => {
-          console.log("hiii "+res);
+        
+
+           this.employeefunction=res.functions;
+          // console.log(this.employeefunction);
+        
+            // functions.functions
+
           if (res.role !== 'admin') {
               sessionStorage.setItem('EMP_NAME',res.emP_NAME);
             sessionStorage.setItem('EMP_ID',res.emP_ID);
@@ -62,7 +70,9 @@ export class LoginComponent implements OnInit{
             console.log(sessionStorage.getItem('EMP_ROLE'));
             console.log(sessionStorage.getItem('EMP_ID'));
             //console.log(sessionStorage.getItem('EMP_NAME'));
-            this.router.navigate(['/dashboard']);
+            console.log(this.employeefunction);
+            sessionStorage.setItem('employeefun', JSON.stringify(this.employeefunction));
+            this.router.navigate(['/empDashboard']);
               
           } else {
             this.error = 'Invalid login attempt';
