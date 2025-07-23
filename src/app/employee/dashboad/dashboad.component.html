@@ -114,7 +114,8 @@
                                 </div>
 
                                 <!-- Time -->
-                                <div class="col-md-6" *ngIf="isProjectSelected && condition">
+                                <div class="col-md-6"
+                                    *ngIf="isProjectSelected && condition">
                                     <label class="form-label fw-bold">Time
                                         (Minutes)</label>
                                     <select class="form-select"
@@ -123,7 +124,7 @@
                                         <option selected disabled>Select
                                             Minute</option>
                                         <option *ngFor="let min of minutes"
-                                            [value]="min+1">{{ min+1 }}
+                                            [value]="min+1">{{ min.min+1 }}
                                             minutes</option>
                                     </select>
                                 </div>
@@ -159,55 +160,54 @@
 
     </div>
 
-    
+    <div class="container mt-4">
+        <div class="table-responsive">
+            <div>
+                <select (change)="GetEmployeeTask($event)">
+                    <option value>Select Date</option>
+                    <option value="{{empdates.employeeWorkDate}}"
+                        *ngFor="let empdates of EmployeeTasks">{{empdates.employeeWorkDate}}</option>
+                </select>
+            </div>
+            <table
+                class="table table-bordered table-striped table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Task Time Slot</th>
+                        <th>Task Function</th>
+                        <th>Task Project</th>
+                        <th>Task Module Name</th>
+                        <th>Task Hours</th>
+                        <th>Task Time From</th>
+                        <th>Task Time To</th>
+                        <th>Task Desc</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let emp of employeeTimesheet">
+                        <td>{{ emp.taskTimeSlot }}</td>
+                        <td>{{ emp.taskFunction }}</td>
+                        <td>{{ emp.taskProject }}</td>
+                        <td>{{ emp.taskModName }}</td>
+                        <td>{{ emp.taskHours == 1 ? 'Full' : emp.taskHours == 2
+                            ? 'Split' : emp.taskHours }}</td>
+                        <td>{{ emp.taskTimeFrom }}</td>
+                        <td>{{ emp.taskTimeTo }}</td>
+                        <td>{{ emp.taskDesc }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Approve Button -->
+            <div class="row justify-content-end mt-3">
+                <div class="col-md-3 text-end">
+                    <button class="btn btn-primary w-100"
+                        (click)="onApproveClick()"
+                        [disabled]="taskApproved">
+                        Approve Task
+                    </button>
+                </div>
+            </div>
 
-    
-
-    <!-- Approve Button -->
-    <div class="row justify-content-end mt-3">
-        <div class="col-md-3 text-end">
-            <button class="btn btn-primary w-100"
-                (click)="onApproveClick()"
-                [disabled]="taskApproved">
-                Approve Task
-            </button>
         </div>
     </div>
-<div class="container mt-4">
-    <div class="table-responsive">
-           <div>
-        <select (change)="GetEmployeeTask($event)">
-            <option value="" >Select Date</option>
-             <option value="{{empdates.employeeWorkDate}}" *ngFor="let empdates of EmployeeTasks" >{{empdates.employeeWorkDate}}</option>
-        </select>
-    </div>
-        <table class="table table-bordered table-striped table-hover align-middle text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th>Task Project</th>
-                    <th>Task Function</th>
-                    <th>Task Module Name</th>
-                    <th>Task Time Slot</th>
-                    <th>Task Hours</th>
-                    <th>Task Time From</th>
-                    <th>Task Time To</th>
-                    <th>Task Desc</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let emp of employeeTimesheet">
-                    <td>{{ emp.taskProject }}</td>
-                    <td>{{ emp.taskFunction }}</td>
-                    <td>{{ emp.taskModName }}</td>
-                    <td>{{ emp.taskTimeSlot }}</td>
-                    <td>{{ emp.taskHours }}</td>
-                    <td>{{ emp.taskTimeFrom }}</td>
-                    <td>{{ emp.taskTimeTo }}</td>
-                    <td>{{ emp.taskDesc }}</td>
-                </tr>
-            </tbody>
-        </table>
-       
-    </div>
-</div>
 </div>

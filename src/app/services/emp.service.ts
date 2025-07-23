@@ -35,7 +35,7 @@ export class EmpService {
   // }
 
   getModules(funId: number): Observable<any[]> {
-    return this.http.get<any[]>('https://localhost:7038/api/Employee/Get-All_Modules?F_ID='+funId );
+    return this.http.get<any[]>(`https://localhost:7038/api/Employee/Get-All_Modules/${funId}`);
   }
 
    
@@ -54,8 +54,8 @@ export class EmpService {
   GetEmpTasksdates(empId: number): Observable<EmployeeDetails[]> {
     return this.http.get<EmployeeDetails[]>('https://localhost:7038/api/Employee/Employee-Work-Dates?employeeId=' + empId);
   }
-  GetEmpTaskDetails(empdetails: {}): Observable<ProjectClient[]> {
-    return this.http.post<ProjectClient[]>("https://localhost:7038/api/Employee/GetEmployee_Work_details_by_dateAnd_Id", empdetails);
+  GetEmpTaskDetails(empdetails: {}): Observable<any[]> {
+    return this.http.post<any[]>("https://localhost:7038/api/Employee/GetEmployee_Work_details_by_dateAnd_Id", empdetails);
   }
   GETMINUTES(empoyeedetails: {}): Observable<ProjectClient[]> {
     return this.http.post<ProjectClient[]>("https://localhost:7038/api/Employee/GetMinutes", empoyeedetails);
