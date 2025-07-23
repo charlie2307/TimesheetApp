@@ -46,7 +46,7 @@
 
             </div> -->
 
-            <div class="row" >
+            <div class="row">
                 <div class="col-md-12">
                     <div class="card shadow-sm">
                         <div class="card-body">
@@ -118,7 +118,8 @@
                                     <label class="form-label fw-bold">Time
                                         (Minutes)</label>
                                     <select class="form-select"
-                                        formControlName="minute" [required]="condition">
+                                        formControlName="minute"
+                                        [required]="condition">
                                         <option selected disabled>Select
                                             Minute</option>
                                         <option *ngFor="let min of minutes"
@@ -128,7 +129,8 @@
                                 </div>
 
                                 <!-- Description -->
-                                <div class="col-md-12 mt-3" *ngIf="isProjectSelected">
+                                <div class="col-md-12 mt-3"
+                                    *ngIf="isProjectSelected">
                                     <label
                                         class="form-label fw-bold">Description</label>
                                     <textarea class="form-control" rows="2"

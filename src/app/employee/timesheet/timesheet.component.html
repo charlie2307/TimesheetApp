@@ -1,1 +1,42 @@
-<p>timesheet works!</p>
+<div class="container">
+    <div>
+        <select (change)="GetEmployeeTask($event)">
+            <option value>Select Date</option>
+            <option value="{{empdates.employeeWorkDate}}"
+                *ngFor="let empdates of EmployeeTasks">{{empdates.employeeWorkDate}}</option>
+        </select>
+    </div>
+
+    <div class="container mt-4">
+        <div class="table-responsive">
+            <table
+                class="table table-bordered table-striped table-hover align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Time Slot</th>
+                        <th>Function</th>
+                        <th>Project</th>
+                        <th>Module Name</th>
+                        <th>Hours</th>
+                        <th>Time From</th>
+                        <th>Time To</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let emp of employeeTimesheet">
+                        <td>{{ emp.taskTimeSlot }}</td>
+                        <td>{{ emp.taskFunction }}</td>
+                        <td>{{ emp.taskProject }}</td>
+                        <td>{{ emp.taskModName }}</td>
+                        <td>{{ emp.taskHours }}</td>
+                        <td>{{ emp.taskTimeFrom }}</td>
+                        <td>{{ emp.taskTimeTo }}</td>
+                        <td>{{ emp.taskDesc }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
