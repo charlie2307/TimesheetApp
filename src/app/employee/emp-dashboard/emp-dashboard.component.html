@@ -64,7 +64,7 @@
 
                         <option value [selected]="true">-- Select Module
                             --</option>
-                        <option value="1">Full</option>
+                        <option value="1" >Full</option>
                         <option value="2">Split</option>
                     </select>
                 </td>
@@ -72,8 +72,8 @@
                     <label for>Time</label>
                     <select class="w-100" formControlName="minute">
                         <option value disabled>Select Minute</option>
-                        <option *ngFor="let min of minutes" [value]="min+1">{{
-                            min+1
+                        <option *ngFor="let minute of minutes" [value]="minute.min+1">{{
+                            minute.min+1
                             }} minutes</option>
                     </select>
 
@@ -106,32 +106,9 @@
              <option value="{{empdates.employeeWorkDate}}" *ngFor="let empdates of EmployeeTasks" >{{empdates.employeeWorkDate}}</option>
         </select>
     </div>
-    <!-- <div class="container">
-        <table >
-            <tr>
-                <th>Task Project </th>
-                <th>Task Function </th>
-                <th>Task Module Name</th>
-                <th>Task Time Slot</th>
-                <th>Task Hours</th>
-                <th>Task Time From </th>
-                <th>Task Time To </th>
-                <th>Task Desc</th>
-            </tr>
-            <tr *ngFor="let emp of employeeTimesheet">
-                <td>{{emp.taskProject}}</td>
-                <td>{{emp.taskFunction}}</td>
-                <td>{{emp.taskModName}}</td>
-                <td>{{emp.taskTimeSlot}}</td>
-                <td>{{emp.taskHours}}</td>
-                <td>{{emp.taskTimeFrom}}</td>
-                <td>{{emp.taskTimeTo}}</td>
-                <td>{{emp.taskDesc}}</td>
-            </tr>
-        </table>
-    </div> -->
+  
 
-    <div class="container mt-4">
+    <!-- <div class="container mt-4">
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover align-middle text-center">
             <thead class="table-dark">
@@ -159,9 +136,8 @@
                 </tr>
             </tbody>
         </table>
-        <input type="time">
-        <input type="time"/>
+       
     </div>
-</div>
+</div> -->
 
 </div>

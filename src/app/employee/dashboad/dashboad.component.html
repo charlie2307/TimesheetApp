@@ -245,5 +245,41 @@
             </button>
         </div>
     </div>
-
+<div class="container mt-4">
+    <div class="table-responsive">
+           <div>
+        <select (change)="GetEmployeeTask($event)">
+            <option value="" >Select Date</option>
+             <option value="{{empdates.employeeWorkDate}}" *ngFor="let empdates of EmployeeTasks" >{{empdates.employeeWorkDate}}</option>
+        </select>
+    </div>
+        <table class="table table-bordered table-striped table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Task Project</th>
+                    <th>Task Function</th>
+                    <th>Task Module Name</th>
+                    <th>Task Time Slot</th>
+                    <th>Task Hours</th>
+                    <th>Task Time From</th>
+                    <th>Task Time To</th>
+                    <th>Task Desc</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let emp of employeeTimesheet">
+                    <td>{{ emp.taskProject }}</td>
+                    <td>{{ emp.taskFunction }}</td>
+                    <td>{{ emp.taskModName }}</td>
+                    <td>{{ emp.taskTimeSlot }}</td>
+                    <td>{{ emp.taskHours }}</td>
+                    <td>{{ emp.taskTimeFrom }}</td>
+                    <td>{{ emp.taskTimeTo }}</td>
+                    <td>{{ emp.taskDesc }}</td>
+                </tr>
+            </tbody>
+        </table>
+       
+    </div>
+</div>
 </div>

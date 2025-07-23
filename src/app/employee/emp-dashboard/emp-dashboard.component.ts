@@ -316,7 +316,7 @@ import { errorContext } from 'rxjs/internal/util/errorContext';
 
 
 export class EmpDashboardComponent implements OnInit {
-  
+
   moduleId: number = 0;
   taskApproved: boolean = false;
   condition: boolean = false;
@@ -325,7 +325,7 @@ export class EmpDashboardComponent implements OnInit {
   newDateTime = new Date();
   modules: any[] = [{}];
   time: number = 60;
-  minutes: number[] = [];
+  minutes: any[] = [];
   selectedMinute: number | null = null;
   timesheetForm!: FormGroup;
   isActiveBtn: boolean = false;
@@ -537,8 +537,8 @@ if (storedData) {
     }
     else {
       this.timesheet.patchValue({
-        timE_TO: this.timeto,
-        timE_FROM: this.timefrom
+        timE_TO: this.timeto.toString(),
+        timE_FROM: this.timefrom.toString()
 
       })
     }
@@ -548,6 +548,7 @@ if (storedData) {
     if (!taskApproved) {
       this.empService.SubmitTask(this.timesheet.value).subscribe(response => {
         console.log(response);
+        this.getslotminutes();
       },
         error => {
           console.log(error);
@@ -574,7 +575,7 @@ if (storedData) {
     this.timesheet.patchValue({
       fuN_ID: selectedFunc.fuN_ID
     })
-    this.empService.getModules(selectedFunc.fuN_NAME).subscribe(resp => {
+    this.empService.getModules(selectedFunc.fuN_ID).subscribe(resp => {
       this.modules = resp;
     },
       error => {
@@ -593,6 +594,15 @@ if (storedData) {
     })
     if (confirm == '1') {
       this.condition = false;
+      const minval=Math.min(...this.minutes.map(emp=>emp.min));
+      if(minval>0 )
+      {
+       
+alert("You already Used Some minutes From This Slot So you not used The Full Time Type for this slot.");
+
+       
+      }
+      
       this.timesheetForm.patchValue({
         type: 1,
 
@@ -602,6 +612,13 @@ if (storedData) {
   onfunctionchange(e: Event) {
     this.slot_id = Number((e.target as HTMLInputElement).value);
     this.getslotminutes();
+     const minval=Math.min(...this.minutes.map(emp=>emp.min));
+        if(minval>0 )
+      {
+        alert("You already Used Some minutes From This Slot So you not used The Full Time Type for this slot.");
+       
+      }
+      
   }
 
   onApproveClick(): void {
@@ -677,12 +694,6 @@ if (storedData) {
   }
   getslotminutes()
   {
-//     const {today10AM}=this.getTodayAndTomorrow10AM();
-   
-// const fullDate = new Date(today10AM); // original datetime
-// const approvalDate = new Date(fullDate.getDate());
-// console.log("HIIII");
-// console.log(approvalDate); 
  const now = new Date();
 
     const today10AM = new Date();
@@ -693,10 +704,10 @@ if (storedData) {
 
     console.log("Today 10AM:", today10AM);
     console.log("Tomorrow 10AM:", tomorrow10AM);
-
+today10AM.toISOString().split('T')[0];
    
     this.empService.GETMINUTES({slotDate:today10AM,emP_ID:Number(sessionStorage.getItem('EMP_ID')),sloT_ID:this.slot_id}).subscribe(response=>{
-    
+    this.minutes=response;
       console.log(response)
     },error=>{
       console.log(error);

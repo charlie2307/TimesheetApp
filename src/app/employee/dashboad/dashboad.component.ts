@@ -106,7 +106,12 @@ export class DashboadComponent implements OnInit {
 
   GetEmpTaskData() {
     const empId = Number(sessionStorage.getItem('EMP_ID'));
-    this.empService.GetEmpTasksdates(empId).subscribe(data => this.EmployeeTasks = data);
+    this.empService.GetEmpTasksdates(empId).subscribe(data => {
+     this.EmployeeTasks = data;
+      console.log(this.EmployeeTasks);
+    
+    });
+   
   }
 
   onfunctionchange(event: Event) {

@@ -7,6 +7,10 @@ export interface ProjectClient {
   client_code: string;
   proj_name: string;
 }
+export interface EmployeeDetails{
+  
+employeeWorkDate:Date;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +35,7 @@ export class EmpService {
   // }
 
   getModules(funId: number): Observable<any[]> {
-    return this.http.get<any[]>(`https://localhost:7038/api/Employee/Get-All_Modules/${funId}` );
+    return this.http.get<any[]>('https://localhost:7038/api/Employee/Get-All_Modules?F_ID='+funId );
   }
 
    
@@ -44,10 +48,11 @@ export class EmpService {
   }
 
   SubmitTask(SubmitTask: {}) {
+    // return this.http.post("https://localhost:7038/api/Employee/Insert_daily_timesheet", SubmitTask);
     return this.http.post("https://localhost:7038/api/Employee/Insert_daily_timesheet", SubmitTask);
   }
-  GetEmpTasksdates(empId: number): Observable<ProjectClient[]> {
-    return this.http.get<ProjectClient[]>('https://localhost:7038/api/Employee/Employee-Work-Dates?employeeId=' + empId);
+  GetEmpTasksdates(empId: number): Observable<EmployeeDetails[]> {
+    return this.http.get<EmployeeDetails[]>('https://localhost:7038/api/Employee/Employee-Work-Dates?employeeId=' + empId);
   }
   GetEmpTaskDetails(empdetails: {}): Observable<ProjectClient[]> {
     return this.http.post<ProjectClient[]>("https://localhost:7038/api/Employee/GetEmployee_Work_details_by_dateAnd_Id", empdetails);
