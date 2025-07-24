@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="container">
+        <table>
+            <tr>
+                <td><label>Add Government Holidays To New Year </label></td>
+                <td><button (click)="AddGovernametHolidays()">Add Government Holidays</button></td>
+            </tr>
+            <tr>
+                <td><label>Week 1</label><input type="checkbox" [(ngModel)]="val1"  /><label>Week 2</label><input type="checkbox" [(ngModel)]="val2" /><label>Week 3</label><input type="checkbox" [(ngModel)]="val3" /><label>Week 4</label><input type="checkbox" [(ngModel)]="val4" /></td>
+                <td><button (click)="SubmitWeeks()">Weeks Submit</button></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h2> Manage Holidays </h2>
+        <div class="container">
+            <table>
+                <tr>
+                    <td><label>Add Holiday</label></td>
+                    <td><input type="date"[(ngModel)]="AddHolidayDate"/></td>
+                    <td><button (click)="AddHoliday()">Add Holiday</button></td>
+                </tr>
+                 <tr>
+                    <td><label>Remove  Holiday</label></td>
+                    <td><input type="date" [(ngModel)]="removeHolidayDate"/></td>
+                    <td><button (click)="RemoveDate()">Remove Holiday</button></td>
+                    <td> <p>{{removeHolidayDate}}</p></td>
+                </tr>
+            </table>
+             <button (click)="GetAllMonths()" style="border-radius: 10px;">Show All Holidays.</button>
+             <select (change)="getHolidaysForMonth($event)">
+                <option *ngFor="let months of groupedHolidays" value="{{months}}">{{months}}</option>
+             </select>
+            <table>
+                 
+                <thead>
+                    <th>All Holidays</th>
+                </thead>
+                <tr *ngFor="let dates of AllHolidays">
+                    
+                     <td>{{ dates | date:'fullDate' }}
+                </tr>
+            </table> 
+
+
+          
+
+           
+        </div>
+    </div>
+</div>
