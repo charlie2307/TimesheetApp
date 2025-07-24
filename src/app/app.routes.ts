@@ -12,7 +12,7 @@ import { LoginComponent } from "./login/login/login.component";
 import { RegisterComponent } from "./login/register/register.component";
 import { TimeslotComponent } from "./admin/timeslot/timeslot.component";
 import { DashboadComponent } from "./employee/dashboad/dashboad.component";
-import { TimesheetComponent } from "./employee/timesheet/timesheet.component";
+// import { TimesheetComponent } from "./employee/timesheet/timesheet.component";
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -20,7 +20,7 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'empDashboard', component: EmpDashboardComponent },
     { path: 'dashboard', component: DashboadComponent },
-    { path:'timesheet', component:TimesheetComponent },
+    // { path:'timesheet', component:TimesheetComponent },
     {
         path: 'admin', component: AdminComponent,
         children: [

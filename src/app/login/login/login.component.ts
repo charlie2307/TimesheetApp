@@ -72,7 +72,7 @@ employeefunction:any[]=[]
             //console.log(sessionStorage.getItem('EMP_NAME'));
             console.log(this.employeefunction);
             sessionStorage.setItem('employeefun', JSON.stringify(this.employeefunction));
-            this.router.navigate(['/empDashboard']);
+            this.router.navigate(['/dashboard']);
               
           } else {
             this.error = 'Invalid login attempt';

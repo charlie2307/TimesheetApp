@@ -17,7 +17,7 @@
             <label for="timeslotId" class="form-label fw-bold">Timeslot</label>
             <select id="timeslotId" class="form-select"
                 formControlName="timeslot"
-                (change)="onfunctionchange($event)">
+                (change)="ontimeslotchange($event)">
                 <option selected disabled>-- Select Timeslot --</option>
                 <option *ngFor="let ts of timeslots" [value]="ts.sloT_ID">{{
                     ts.sloT_NAME }}</option>
@@ -47,7 +47,7 @@
             </div> -->
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" >
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="row g-3">
@@ -75,7 +75,7 @@
                                 </div>
 
                                 <!-- Module -->
-                                <div class="col-md-6" *ngIf="isProjectSelected">
+                                <div class="col-md-6" *ngIf="isProjectSelected && isFunSelected">
                                     <label
                                         class="form-label fw-bold">Modules</label>
                                     <select class="form-select"
@@ -92,10 +92,10 @@
                                 </div>
 
                                 <!-- Time Mode -->
-                                <div class="col-md-6" *ngIf="isProjectSelected">
-                                    <label class="form-label fw-bold">Time
+                                <div class="col-md-6" *ngIf="isProjectSelected && isFunSelected">
+                                    <label class="form-label fw-bold d-flex">Time
                                         Mode</label>
-                                    <div class="form-check">
+                                    <div class="form-check d-inline-block">
                                         <input class="form-check-input"
                                             type="radio"
                                             name="timeType" value="1"
@@ -103,7 +103,7 @@
                                         <label
                                             class="form-check-label">Full</label>
                                     </div>
-                                    <div class="form-check">
+                                    <div class="form-check d-inline-block ms-5">
                                         <input class="form-check-input"
                                             type="radio"
                                             name="timeType" value="2"
@@ -115,7 +115,7 @@
 
                                 <!-- Time -->
                                 <div class="col-md-6"
-                                    *ngIf="isProjectSelected && condition">
+                                    *ngIf="isProjectSelected && condition && isFunSelected">
                                     <label class="form-label fw-bold">Time
                                         (Minutes)</label>
                                     <select class="form-select"
@@ -124,14 +124,14 @@
                                         <option selected disabled>Select
                                             Minute</option>
                                         <option *ngFor="let min of minutes"
-                                            [value]="min+1">{{ min.min+1 }}
+                                            [value]="min+1">{{ min+1 }}
                                             minutes</option>
                                     </select>
                                 </div>
 
                                 <!-- Description -->
                                 <div class="col-md-12 mt-3"
-                                    *ngIf="isProjectSelected">
+                                    *ngIf="isProjectSelected && isFunSelected">
                                     <label
                                         class="form-label fw-bold">Description</label>
                                     <textarea class="form-control" rows="2"
@@ -168,7 +168,9 @@
                     <option value="{{empdates.employeeWorkDate}}"
                         *ngFor="let empdates of EmployeeTasks">{{empdates.employeeWorkDate}}</option>
                 </select>
+                
             </div>
+            <input type="date">
             <table
                 class="table table-bordered table-striped table-hover align-middle text-center">
                 <thead class="table-dark">

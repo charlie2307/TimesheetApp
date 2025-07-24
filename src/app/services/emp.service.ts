@@ -57,7 +57,18 @@ export class EmpService {
   GetEmpTaskDetails(empdetails: {}): Observable<any[]> {
     return this.http.post<any[]>("https://localhost:7038/api/Employee/GetEmployee_Work_details_by_dateAnd_Id", empdetails);
   }
+  
   GETMINUTES(empoyeedetails: {}): Observable<ProjectClient[]> {
     return this.http.post<ProjectClient[]>("https://localhost:7038/api/Employee/GetMinutes", empoyeedetails);
   }
+
+  getSlotMinute(time: string, empId: number, slot: number) {
+  return this.http.get<string>('https://localhost:7038/api/Employee/GetMinutes', {
+    params: {
+      time: time,
+      empId: empId.toString(),
+      slot: slot.toString()
+    }
+  });
+}
 }
