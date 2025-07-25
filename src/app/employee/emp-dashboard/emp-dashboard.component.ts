@@ -400,13 +400,13 @@ export class EmpDashboardComponent implements OnInit {
     console.log("Tomorrow 10AM:", tomorrow10AM);
     today10AM.toISOString().split('T')[0];
 
-    this.empService.GETMINUTES({ slotDate: today10AM, emP_ID: Number(sessionStorage.getItem('EMP_ID')), sloT_ID: this.slot_id }).subscribe(response => {
-      this.minutes = response;
-      console.log(response)
-    }, error => {
-      console.log(error);
-    }
-    )
+    // this.empService.GETMINUTES({ slotDate: today10AM, emP_ID: Number(sessionStorage.getItem('EMP_ID')), sloT_ID: this.slot_id }).subscribe(response => {
+    //   this.minutes = response;
+    //   console.log(response)
+    // }, error => {
+    //   console.log(error);
+    // }
+    // )
   }
 }
 

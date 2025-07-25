@@ -32,7 +32,7 @@
                 <label class="form-label fw-bold">Functions</label>
                 <button
                     class="btn btn-outline-primary my-1"
-                    [class.active]="selectedFunctionId === fun.fuN_ID"
+                    [class.active]="isFunSelected && selectedFunctionId === fun.fuN_ID"
                     *ngFor="let fun of functions"
                     type="button"
                     (click)="onselectfunction(fun)">
@@ -48,11 +48,11 @@
 
             <div class="row">
                 <div class="col-md-12" >
-                    <div class="card shadow-sm">
+                    <div class="card shadow-sm" *ngIf="isFunSelected">
                         <div class="card-body">
                             <div class="row g-3">
 
-                                <div class="col-md-6" *ngIf="isFunSelected">
+                                <div class="col-md-6">
                                     <label class="form-label fw-bold">ClientCode
                                         -
                                         ProjectName</label>
@@ -75,7 +75,7 @@
                                 </div>
 
                                 <!-- Module -->
-                                <div class="col-md-6" *ngIf="isProjectSelected && isFunSelected">
+                                <div class="col-md-6" *ngIf="isProjectSelected">
                                     <label
                                         class="form-label fw-bold">Modules</label>
                                     <select class="form-select"
@@ -92,7 +92,7 @@
                                 </div>
 
                                 <!-- Time Mode -->
-                                <div class="col-md-6" *ngIf="isProjectSelected && isFunSelected">
+                                <div class="col-md-6" *ngIf="isProjectSelected">
                                     <label class="form-label fw-bold d-flex">Time
                                         Mode</label>
                                     <div class="form-check d-inline-block">
@@ -115,7 +115,7 @@
 
                                 <!-- Time -->
                                 <div class="col-md-6"
-                                    *ngIf="isProjectSelected && condition && isFunSelected">
+                                    *ngIf="isProjectSelected && condition">
                                     <label class="form-label fw-bold">Time
                                         (Minutes)</label>
                                     <select class="form-select"
@@ -131,7 +131,7 @@
 
                                 <!-- Description -->
                                 <div class="col-md-12 mt-3"
-                                    *ngIf="isProjectSelected && isFunSelected">
+                                    *ngIf="isProjectSelected">
                                     <label
                                         class="form-label fw-bold">Description</label>
                                     <textarea class="form-control" rows="2"

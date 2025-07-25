@@ -88,6 +88,7 @@ export class DashboadComponent implements OnInit {
     this.loadProjects();
     this.GetEmpTaskData();
     this.timesheetDate();
+    this.maxMinInSlot();
 
     // this.minutes = Array.from({ length: this.time }, (_, i) => i);
     setInterval(() => this.currentDateTime = new Date(), 1000);
@@ -108,7 +109,6 @@ export class DashboadComponent implements OnInit {
     setInterval(() => {
       this.currentDateTime = new Date();
     }, 1000);
-
 
     this.timesheetForm = this.fb.group({
       type: ['', Validators.required],
@@ -140,14 +140,14 @@ export class DashboadComponent implements OnInit {
     this.timesheet = this.fb.group({
       emP_ID: Number(sessionStorage.getItem('EMP_ID')),
       sloT_ID: 0,
-      hours: this.timesheetForm.get('type')?.value,
+      hours: 0,
       proJ_ID: 0,
-      fuN_ID: this.selectedFunctionId,
+      fuN_ID: 0,
       moD_ID: 0,
-      timE_FROM: this.TimeFrom,
-      timE_TO: this.TimeTO,
-      timesheeT_DESC: this.timesheetForm.get('description')?.value,
-      createD_BY: sessionStorage.getItem('EMP_NAME')
+      timE_FROM: '',
+      timE_TO: '',
+      timesheeT_DESC: '',
+      createD_BY: ''
     })
 
     this.taskApproved = Boolean(localStorage.getItem('taskApproved'));
@@ -182,17 +182,23 @@ export class DashboadComponent implements OnInit {
     const selectedDate = this.selectedDate;
     const emp_ID = Number(sessionStorage.getItem('EMP_ID'));
     const slot_ID = this.timesheetForm.get('timeslot')?.value;
-    this.empService.getSlotMinute(selectedDate, emp_ID, slot_ID).subscribe({
+    const requestData = {
+      slotDate: selectedDate,
+      emP_ID: emp_ID,
+      sloT_ID: slot_ID
+    }
+    this.empService.GETMINUTES(requestData).subscribe({
       next: (res) => {
-        console.log('Max Time:', res);
+
         this.maxSlotTime = Number(res);
+        console.log('Max Time:', this.maxSlotTime);
+        return res;
       },
       error: (err) => {
         console.error('Error fetching max time:', err);
       }
     });
   }
-
 
   initForm() {
     this.timesheetForm = this.fb.group({
@@ -251,22 +257,24 @@ export class DashboadComponent implements OnInit {
 
     this.slot_id = Number((event.target as HTMLInputElement).value);
     this.maxMinInSlot();
+    
+    console.log("MaxTime-" + this.maxSlotTime);
+    if (this.maxSlotTime < 60) {
+
+
+      this.isSlotSelected = true;
+      this.isFunSelected = false;
+      this.isProjectSelected = false;
+
+      this.selectedFunctionId = 0;
+      this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
+    }
+    else {
+      alert("This slot is full.")
+    }
+
     console.log("----------");
     console.log(this.maxSlotTime);
-    this.time = 60 - this.maxSlotTime;
-    console.log("time: " + this.time);
-    this.minutes = Array.from({ length: this.time }, (_, i) => i);
-    // const minval = Math.min(...this.minutes.map(emp => emp.min));
-    // if (minval > 0) {
-    //   alert("You already Used Some minutes From This Slot So you not used The Full Time Type for this slot.");
-    // }
-
-    this.isSlotSelected = true;
-    this.isFunSelected = false;
-    this.isProjectSelected = false;
-
-    this.selectedFunctionId = 0;
-    this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
   }
 
   onselectfunction(fun: any) {
@@ -321,9 +329,9 @@ export class DashboadComponent implements OnInit {
     if (type === '2') { // Split
       this.condition = true;
       // this.getslotminutes();
-      let selectedMinute = Number(this.timesheetForm.get('minute')?.value);
-      this.TimeFrom = this.maxSlotTime.toString();
-    this.TimeTO = String(this.maxSlotTime + selectedMinute);
+      this.time = 60 - this.maxSlotTime;
+      console.log("time: " + this.time);
+      this.minutes = Array.from({ length: this.time }, (_, i) => i);
 
       this.timesheetForm.get('minute')?.setValidators(Validators.required);
       this.timesheetForm.get('minute')?.updateValueAndValidity();
@@ -336,6 +344,8 @@ export class DashboadComponent implements OnInit {
       if (this.maxSlotTime === 0) {
         this.TimeFrom = '00';
         this.TimeTO = '60'
+        this.timesheetForm.patchValue({ type: 1 });
+        console.log("Type:" + this.timesheetForm.get('type')?.value);
       }
       else {
         alert("You already Used Some minutes From This Slot So you not used The Full Time Type for this slot.");
@@ -356,9 +366,18 @@ export class DashboadComponent implements OnInit {
   }
 
   onSubmit() {
+
     const taskApproved = Boolean(localStorage.getItem('taskApproved'));
 
-    
+    if (this.timesheetForm.get('type')?.value == '2') {
+      let selectedMinute = Number(this.timesheetForm.get('minute')?.value);
+
+      this.TimeFrom = this.maxSlotTime.toString();
+      this.TimeTO = (this.maxSlotTime + selectedMinute).toString();
+      console.log("SelectMin=" + this.selectedMinute);
+      console.log("TimeFrom=" + this.TimeFrom);
+      console.log("TimeTo=" + this.TimeTO);
+    }
 
     this.timesheet.patchValue({
       sloT_ID: this.slot_id,
@@ -371,7 +390,6 @@ export class DashboadComponent implements OnInit {
       timesheeT_DESC: this.timesheetForm.get('description')?.value,
       createD_BY: sessionStorage.getItem('EMP_NAME')
     });
-
 
     // if (this.timesheet.get('hours')?.value == 1) { //full
     //   if (this.maxSlotTime == 0) {
@@ -392,21 +410,20 @@ export class DashboadComponent implements OnInit {
 
     //   })
     // }
-    this.timesheet.patchValue({ fuN_ID: this.selectedFunctionId });
-    this.timesheet.patchValue({})
-    console.log("Selected FunId : " + this.selectedFunctionId)
-    console.log(this.timesheet.value);
+    const FullTimesheet = this.timesheet.value;
+
     if (!taskApproved) {
-      this.empService.SubmitTask(this.timesheet.value).subscribe(response => {
-        console.log(response);
+      console.log(this.timesheet.value);
+      this.empService.SubmitTask(FullTimesheet).subscribe(response => {
+        console.log(this.timesheet.value);
         alert("Task Added SuccessFully.");
       },
         error => {
-          console.log(error);
+          console.error(error);
         });
     }
     else {
-      alert("You have already approved todays task.!\n Come Tomorrow For Add The Tomorrow Tasks.")
+      alert("You have already approved todays task.!\n Come Tomorrow For Add The Tomorrow Tasks.");
     }
 
     // if (this.taskApproved) {
@@ -420,6 +437,7 @@ export class DashboadComponent implements OnInit {
     // }
 
     this.isFunSelected = false;
+    this.maxSlotTime=0;
 
   }
 
