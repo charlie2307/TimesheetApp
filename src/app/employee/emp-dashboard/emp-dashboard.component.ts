@@ -155,15 +155,15 @@ export class EmpDashboardComponent implements OnInit {
     );
   }
   loadFunctions() {
-    this.empService.getFunctions().subscribe(
-      (data) => {
-        this.functions = data;
-        console.log(data);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    // this.empService.getFunctions().subscribe(
+    //   (data) => {
+    //     this.functions = data;
+    //     console.log(data);
+    //   },
+    //   (error) => {
+    //     console.error(error);
+    //   }
+    // );
   }
   onprojectselect(E: Event) {
     this.proJ_ID = Number((E.target as HTMLInputElement).value);

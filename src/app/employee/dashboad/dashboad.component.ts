@@ -59,6 +59,9 @@ export class DashboadComponent implements OnInit {
   selectedDate: string = '';
   maxSlotTime: number = 0;
 
+  today10am!: Date;
+  tommarow10am!: Date;
+
   groupedTimesheet: { timeslot: string, entries: any[] }[] = [];
 
   constructor(
@@ -84,11 +87,17 @@ export class DashboadComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTimeslots();
-    this.loadFunctions();
+    // this.loadFunctions();
     this.loadProjects();
     this.GetEmpTaskData();
     this.timesheetDate();
-    this.maxMinInSlot();
+    this.getTodayAndTomorrow10AM();
+
+    const today = new Date();
+    this.selectedDate = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+
+    this.employeeTimesheet.sort((a, b) => a.taskTimeSlot.localeCompare(b.taskTimeSlot));
+
 
     // this.minutes = Array.from({ length: this.time }, (_, i) => i);
     setInterval(() => this.currentDateTime = new Date(), 1000);
@@ -99,11 +108,11 @@ export class DashboadComponent implements OnInit {
     this.checkTaskApproval();
     this.resetTaskApprovalIfExpired();
 
-    const storedData = sessionStorage.getItem('employeefun');
-    if (storedData) {
-      this.functions = JSON.parse(storedData);
-      console.log('Function list from sessionStorage:', this.functions);
-    }
+    // const storedData = sessionStorage.getItem('employeefun');
+    // if (storedData) {
+    //   this.functions = JSON.parse(storedData);
+    //   console.log('Function list from sessionStorage:', this.functions);
+    // }
     const timeChange =
       this.currentDateTime = new Date();
     setInterval(() => {
@@ -154,6 +163,7 @@ export class DashboadComponent implements OnInit {
 
   }
 
+
   timesheetDate() {
     const now = new Date();
 
@@ -187,17 +197,17 @@ export class DashboadComponent implements OnInit {
       emP_ID: emp_ID,
       sloT_ID: slot_ID
     }
-    this.empService.GETMINUTES(requestData).subscribe({
-      next: (res) => {
+    // this.empService.GETMINUTES(requestData).subscribe({
+    //   next: (res) => {
 
-        this.maxSlotTime = Number(res);
-        console.log('Max Time:', this.maxSlotTime);
-        return res;
-      },
-      error: (err) => {
-        console.error('Error fetching max time:', err);
-      }
-    });
+    //     this.maxSlotTime = Number(res);
+    //     console.log('Max Time:', this.maxSlotTime);
+    //     return res;
+    //   },
+    //   error: (err) => {
+    //     console.error('Error fetching max time:', err);
+    //   }
+    // });
   }
 
   initForm() {
@@ -221,15 +231,12 @@ export class DashboadComponent implements OnInit {
   }
 
   loadFunctions() {
-    this.empService.getFunctions().subscribe(
-      (data) => {
-        this.functions = data;
-        console.log(data);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+    const storedData = sessionStorage.getItem('employeefun');
+    if (storedData) {
+      this.functions = JSON.parse(storedData);
+      console.log('Function list from sessionStorage:', this.functions);
+    }
+
   }
 
   loadProjects() {
@@ -254,30 +261,56 @@ export class DashboadComponent implements OnInit {
   }
 
   ontimeslotchange(event: Event) {
-
+    var maxTime = 0;
     this.slot_id = Number((event.target as HTMLInputElement).value);
-    this.maxMinInSlot();
-    
-    console.log("MaxTime-" + this.maxSlotTime);
-    if (this.maxSlotTime < 60) {
-
-
-      this.isSlotSelected = true;
-      this.isFunSelected = false;
-      this.isProjectSelected = false;
-
-      this.selectedFunctionId = 0;
-      this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
+    const selectedDate = this.selectedDate;
+    const emp_ID = Number(sessionStorage.getItem('EMP_ID'));
+    const slot_ID = this.slot_id;
+    const requestData = {
+      slotDate: selectedDate,
+      emP_ID: emp_ID,
+      sloT_ID: slot_ID
     }
-    else {
-      alert("This slot is full.")
-    }
+    console.log(requestData);
+    this.empService.GETMINUTES(requestData).subscribe({
+      next: (res) => {
+        maxTime = Number(res);
+        console.log('res:', res);
+        console.log('Max Time:', maxTime);
 
-    console.log("----------");
-    console.log(this.maxSlotTime);
+        if (maxTime < 60) {
+          this.loadFunctions();
+          this.maxSlotTime = maxTime;
+          console.log("mxSlot:" + this.maxSlotTime)
+          this.isSlotSelected = true;
+          this.isFunSelected = false;
+          this.isProjectSelected = false;
+
+          this.selectedFunctionId = 0;
+          this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
+        }
+        else {
+          alert("This slot is full.");
+
+          this.isSlotSelected = false;
+          this.isFunSelected = false;
+          this.isProjectSelected = false;
+
+          this.selectedFunctionId = 0;
+          this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
+        }
+
+      },
+
+      error: (err) => {
+        console.error('Error fetching max time:', err);
+      }
+    });
+
   }
 
   onselectfunction(fun: any) {
+
     this.selectedFunctionId = fun.fuN_ID;
     this.isFunSelected = true;
     this.isProjectSelected = false;
@@ -301,6 +334,7 @@ export class DashboadComponent implements OnInit {
 
   onprojectselect(event: Event) {
     this.proJ_ID = Number((event.target as HTMLSelectElement).value);
+
     this.timesheet.patchValue({
       proJ_ID: this.proJ_ID
     })
@@ -311,6 +345,11 @@ export class DashboadComponent implements OnInit {
       this.timesheetForm.get('module')?.updateValueAndValidity();
       this.timesheetForm.get('module')?.disable();
     }
+
+    if (this.maxSlotTime === 0) {
+      this.condition = true;
+    }
+
   }
 
   onselectModule(e: Event) {
@@ -349,6 +388,7 @@ export class DashboadComponent implements OnInit {
       }
       else {
         alert("You already Used Some minutes From This Slot So you not used The Full Time Type for this slot.");
+        this.timesheetForm.invalid;
       }
 
       this.timesheetForm.get('minute')?.clearValidators();
@@ -435,10 +475,13 @@ export class DashboadComponent implements OnInit {
     //   this.timesheetForm.markAllAsTouched();
     //   return;
     // }
-
     this.isFunSelected = false;
-    this.maxSlotTime=0;
+    this.maxSlotTime = 0;
 
+    if(this.maxSlotTime===60){
+      this.isSlotSelected=false
+    }
+    
   }
 
   // getslotminutes() {

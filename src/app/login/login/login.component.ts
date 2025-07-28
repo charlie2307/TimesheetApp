@@ -41,7 +41,7 @@ employeefunction:any[]=[]
     console.log(email);
     console.log(password);
 
-    if (sessionStorage.getItem('role')==='admin') {
+    if (email==="admin123@gmail.com" && password==="Admin@123") {
       window.location.href = '/admin';
 
       // this.authService.login(email, password).subscribe(

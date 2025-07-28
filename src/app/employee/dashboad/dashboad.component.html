@@ -36,7 +36,7 @@
                     *ngFor="let fun of functions"
                     type="button"
                     (click)="onselectfunction(fun)">
-                    {{ fun.fuN_NAME }}
+                    {{ fun.functions }}
                 </button>
             </div>
         </div>
@@ -47,7 +47,7 @@
             </div> -->
 
             <div class="row">
-                <div class="col-md-12" >
+                <div class="col-md-12">
                     <div class="card shadow-sm" *ngIf="isFunSelected">
                         <div class="card-body">
                             <div class="row g-3">
@@ -75,7 +75,8 @@
                                 </div>
 
                                 <!-- Module -->
-                                <div class="col-md-6" *ngIf="isProjectSelected">
+                                <div class="col-md-6"
+                                    *ngIf="isProjectSelected && modules.length!=0">
                                     <label
                                         class="form-label fw-bold">Modules</label>
                                     <select class="form-select"
@@ -93,7 +94,8 @@
 
                                 <!-- Time Mode -->
                                 <div class="col-md-6" *ngIf="isProjectSelected">
-                                    <label class="form-label fw-bold d-flex">Time
+                                    <label
+                                        class="form-label fw-bold d-flex">Time
                                         Mode</label>
                                     <div class="form-check d-inline-block">
                                         <input class="form-check-input"
@@ -168,9 +170,9 @@
                     <option value="{{empdates.employeeWorkDate}}"
                         *ngFor="let empdates of EmployeeTasks">{{empdates.employeeWorkDate}}</option>
                 </select>
-                
             </div>
-            <input type="date">
+            <input type="date" [value]="selectedDate" />
+            <!-- (change)="onDateChange($event)" -->
             <table
                 class="table table-bordered table-striped table-hover align-middle text-center">
                 <thead class="table-dark">
@@ -186,8 +188,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let emp of employeeTimesheet">
-                        <td>{{ emp.taskTimeSlot }}</td>
+                    <tr *ngFor="let emp of employeeTimesheet; let i = index">
+                        <td>
+                            {{ i === 0 || emp.taskTimeSlot !==
+                            employeeTimesheet[i - 1].taskTimeSlot ?
+                            emp.taskTimeSlot : '' }}
+                        </td>
                         <td>{{ emp.taskFunction }}</td>
                         <td>{{ emp.taskProject }}</td>
                         <td>{{ emp.taskModName }}</td>
