@@ -6,7 +6,8 @@ import { AdminService } from '../../services/admin.service';
 
 interface FunctionEntry {
   fuN_NAME: string;
-  rolE_NAME: string;
+  fuN_CODE:string;
+  rolE_ID: number;
 }
 
 @Component({
@@ -32,15 +33,23 @@ export class FunctionComponent implements OnInit {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(50),
-          Validators.pattern(/^[A-Za-z\s]+$/)
+          Validators.pattern(/^[A-Za-z&\s]+$/)
         ]
       ],
-      rolE_NAME: ['', Validators.required]
+      fuN_CODE: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(50),
+          Validators.pattern(/^[A-Za-z0-9\s]+$/)
+        ]
+      ],
+      rolE_ID: ['', Validators.required]
     });
 
     this.loadFunctions();
     this.loadRoles();
-
     
   }
 
@@ -60,9 +69,12 @@ export class FunctionComponent implements OnInit {
   get fuN_NAME() {
     return this.functionForm.get('fuN_NAME');
   }
+  get fuN_CODE() {
+    return this.functionForm.get('fuN_NAME');
+  }
 
-  get rolE_NAME() {
-    return this.functionForm.get('rolE_NAME');
+  get rolE_ID() {
+    return this.functionForm.get('rolE_ID');
   }
 
   // onSubmit() {
@@ -97,7 +109,8 @@ export class FunctionComponent implements OnInit {
     if (this.functionForm.valid) {
       const entry: FunctionEntry = {
         fuN_NAME: this.fuN_NAME?.value.trim(),
-        rolE_NAME: this.rolE_NAME?.value
+        fuN_CODE:this.fuN_CODE?.value.trim(),
+        rolE_ID: this.rolE_ID?.value
       };
       
       // prevent duplicates
@@ -105,12 +118,13 @@ export class FunctionComponent implements OnInit {
         this.functions.some(
           f =>
             f.fuN_NAME.toLowerCase() === entry.fuN_NAME.toLowerCase() &&
-            f.rolE_NAME === entry.rolE_NAME
+            f.rolE_ID === entry.rolE_ID
         )
       ) {
         alert('This function & role combination already exists!');
         return;
       }
+      console.log(this.functionForm.value);
       this.adminService.addFunction(this.functionForm.value).subscribe(
       (response) => {
         console.log('Function added successfully', response);
@@ -161,10 +175,11 @@ export class FunctionComponent implements OnInit {
 
   editEmp(fun: any) {
     this.isEditing = true;
-    this.editingFunId = fun.funN_ID; // assuming employee has emP_ID
+    this.editingFunId = fun.fuN_ID; // assuming employee has emP_ID
 
     this.functionForm.patchValue({
       fuN_NAME: fun.fuN_NAME,
+      fuN_CODE: fun.fuN_CODE,
       rolE_ID: fun.rolE_ID
     });
   }

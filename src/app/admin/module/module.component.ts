@@ -41,10 +41,10 @@ export class ModuleComponent implements OnInit {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(50),
-          Validators.pattern(/^[A-Za-z0-9\s]+$/)
+          Validators.pattern(/^[A-Za-z0-9#\s]+$/)
         ]
       ],
-      fuN_NAME: ['', Validators.required]
+      fuN_ID: ['', Validators.required]
     });
 
     this.loadFunctions();
@@ -75,8 +75,8 @@ export class ModuleComponent implements OnInit {
     return this.moduleForm.get('moD_CODE');
   }
 
-  get fuN_NAME() {
-    return this.moduleForm.get('fuN_NAME');
+  get fuN_ID() {
+    return this.moduleForm.get('fuN_ID');
   }
 
   onSubmit(): void {
@@ -86,11 +86,12 @@ export class ModuleComponent implements OnInit {
     }
 
     const clientData = {
+      fuN_ID: Number(this.moduleForm.value.fuN_ID),
       moD_CODE: this.moduleForm.value.moD_CODE,
       moD_NAME: this.moduleForm.value.moD_NAME
     };
-
-    this.adminService.addClient(clientData).subscribe(
+console.log(clientData);
+    this.adminService.addModule(clientData).subscribe(
       (response) => {
         console.log('Module added successfully', response);
         alert('Module added successfully!');
@@ -140,12 +141,12 @@ export class ModuleComponent implements OnInit {
 
     const funcId = mod.fuN_ID
       ? mod.fuN_ID
-      : this.functions.find(f => f.fuN_NAME === mod.fuN_NAME)?.fuN_ID;
+      : this.functions.find(f => f.fuN_ID === mod.fuN_ID)?.fuN_ID;
 
     this.moduleForm.patchValue({
       moD_NAME: mod.moD_NAME,
       moD_CODE: mod.moD_CODE,
-      fuN_NAME: funcId || ''
+      fuN_ID: funcId || ''
     });
   }
 

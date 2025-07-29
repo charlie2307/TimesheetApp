@@ -45,7 +45,7 @@ export class ProjectComponent implements OnInit {
           Validators.maxLength(200),
         ],
       ],
-      clienT_NAME: ['', Validators.required],
+      clienT_ID: ['', Validators.required],
     });
 
     this.loadClients();
@@ -81,8 +81,8 @@ export class ProjectComponent implements OnInit {
     return this.projectForm.get('proJ_CODE');
   }
 
-  get clienT_NAME() {
-    return this.projectForm.get('clienT_NAME');
+  get clienT_ID() {
+    return this.projectForm.get('clienT_ID');
   }
 
   onSubmit(): void {
@@ -95,7 +95,7 @@ export class ProjectComponent implements OnInit {
       proJ_CODE: this.projectForm.value.proJ_CODE,
       proJ_NAME: this.projectForm.value.proJ_NAME,
       proJ_DESC: this.projectForm.value.proJ_DESC,
-      clienT_NAME: this.projectForm.value.clienT_NAME
+      clienT_ID: this.projectForm.value.clienT_ID
     };
     console.log(projectData);
     this.adminService.addProject(projectData).subscribe(
@@ -128,6 +128,7 @@ export class ProjectComponent implements OnInit {
           console.log("hii " + res.message);
           alert('Project updated successfully!');
           this.projectForm.reset();
+          this.isEditing=false;
           this.ngOnInit();
         },
         error: (err) => {
@@ -148,19 +149,19 @@ export class ProjectComponent implements OnInit {
 
     const clientId = proj.clienT_ID
       ? proj.clienT_ID
-      : this.clients.find(f => f.clienT_NAME === proj.clienT_NAME)?.clienT_ID;
+      : this.clients.find(f => f.clienT_ID === proj.clienT_ID)?.clienT_ID;
 
     this.projectForm.patchValue({
       proJ_NAME: proj.proJ_NAME,
       proJ_CODE:proj.proJ_CODE,
       proJ_DESC:proj.proJ_DESC,
-      clienT_NAME: clientId || ''
+      clienT_ID: clientId || ''
     });
 
     // this.projectForm.patchValue({
     //   proJ_NAME: proj.proJ_NAME,
     //   proJ_CODE:proj.proJ_CODE,
-    //   proJ_DESC:proj.proJ_DESC,
+    //   proJ_DESCRIPTION:proj.proJ_DESCRIPTION,
     //   clienT_ID: proj.clienT_ID
     // });
   }

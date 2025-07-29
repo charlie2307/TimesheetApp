@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  <div class="row">
+  <div class="row justify-content-center">
     <div class="col-md-6">
       <h4>Add Function</h4>
       <form [formGroup]="functionForm" (ngSubmit)="onSubmit()">
@@ -9,45 +9,62 @@
             type="text"
             class="form-control"
             placeholder="Enter Function Name"
-            formControlName="fuN_NAME"
-          />
+            formControlName="fuN_NAME" />
           <div
             class="text-danger"
-            *ngIf="fuN_NAME?.invalid && fuN_NAME?.touched"
-          >
-            <small *ngIf="fuN_NAME?.errors?.['required']"
-              >Function Name is required</small
-            >
-            <small *ngIf="fuN_NAME?.errors?.['minlength']"
-              >At least 3 characters</small
-            >
-            <small *ngIf="fuN_NAME?.errors?.['maxlength']"
-              >Maximum 50 characters</small
-            >
-            <small *ngIf="fuN_NAME?.errors?.['pattern']"
-              >Only letters and spaces allowed</small
-            >
+            *ngIf="fuN_NAME?.invalid && fuN_NAME?.touched">
+            <small *ngIf="fuN_NAME?.errors?.['required']">Function Name is
+              required</small>
+            <small *ngIf="fuN_NAME?.errors?.['minlength']">At least 3
+              characters</small>
+            <small *ngIf="fuN_NAME?.errors?.['maxlength']">Maximum 50
+              characters</small>
+            <small *ngIf="fuN_NAME?.errors?.['pattern']">Only letters and spaces
+              allowed</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>Function Code</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Function Name"
+            formControlName="fuN_CODE" />
+          <div
+            class="text-danger"
+            *ngIf="fuN_CODE?.invalid && fuN_CODE?.touched">
+            <small *ngIf="fuN_CODE?.errors?.['required']">Function Name is
+              required</small>
+            <small *ngIf="fuN_CODE?.errors?.['minlength']">At least 3
+              characters</small>
+            <small *ngIf="fuN_CODE?.errors?.['maxlength']">Maximum 50
+              characters</small>
+            <small *ngIf="fuN_CODE?.errors?.['pattern']">Only letters and spaces
+              allowed</small>
           </div>
         </div>
 
         <div class="mb-3">
           <label>Role</label>
-          <select class="form-select" formControlName="rolE_NAME">
-            <option value="">Select Role</option>
+          <select class="form-select" formControlName="rolE_ID">
+            <option value>Select Role</option>
             <option *ngFor="let r of roles" [value]="r.rolE_ID">{{ r.rolE_NAME
               }}</option>
           </select>
-          <div class="text-danger" *ngIf="rolE_NAME?.invalid && rolE_NAME?.touched">
+          <div class="text-danger" *ngIf="rolE_ID?.invalid && rolE_ID?.touched">
             <small>Role is required</small>
           </div>
         </div>
 
         <div>
-          <button type="submit" *ngIf="!isEditing" [disabled]="functionForm.invalid"
-            class="btn btn-primary w-100">Register</button>
+          <button type="submit" *ngIf="!isEditing"
+            [disabled]="functionForm.invalid"
+            class="btn btn-primary w-100">Add Function</button>
         </div>
         <div>
-          <button type="button" *ngIf="isEditing" [disabled]="functionForm.invalid"
+          <button type="button" *ngIf="isEditing"
+            [disabled]="functionForm.invalid"
             class="btn btn-primary w-50 " (click)="updateEmp()">Update</button>
           <button type="submit" *ngIf="isEditing"
             class="btn btn-primary w-50 " (click)="resetForm()">Cancel</button>
@@ -55,16 +72,18 @@
       </form>
     </div>
 
-    <div class="col-md-6">
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-10">
       <h4>Added Functions</h4>
       <table
         class="table table-bordered table-striped mt-3"
-        *ngIf="functions.length > 0"
-      >
+        *ngIf="functions.length > 0">
         <thead class="table-dark">
           <tr>
             <th>#</th>
             <th>Function Name</th>
+            <th>Function Code</th>
             <th>Role</th>
             <th>Edit</th>
             <th>Delete</th>
@@ -74,11 +93,12 @@
           <tr *ngFor="let f of functions; let i = index">
             <td>{{ i + 1 }}</td>
             <td>{{ f.fuN_NAME }}</td>
+            <td>{{f.fuN_CODE}}</td>
             <td>{{ f.rolE_NAME }}</td>
             <td><button class="btn btn-success"
                 (click)="editEmp(f)">Edit</button></td>
             <td><button class="btn btn-danger"
-              (click)="deleteEmp(f.fuN_ID)">Delete</button></td>
+                (click)="deleteEmp(f.fuN_ID)">Delete</button></td>
           </tr>
         </tbody>
       </table>

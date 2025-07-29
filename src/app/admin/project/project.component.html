@@ -1,6 +1,6 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <fieldset>
                 <legend>Add Project</legend>
                 <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
@@ -76,7 +76,7 @@
                     <div class="mb-3">
                         <label>Client Name</label>
                         <select class="form-select"
-                            formControlName="clienT_NAME">
+                            formControlName="clienT_ID">
                             <option value>Select Client</option>
                             <option *ngFor="let client of clients"
                                 [value]="client.clienT_ID">
@@ -85,7 +85,7 @@
                         </select>
                         <div
                             class="text-danger"
-                            *ngIf="clienT_NAME?.invalid && clienT_NAME?.touched">
+                            *ngIf="clienT_ID?.invalid && clienT_ID?.touched">
                             <small>Client Name is required</small>
                         </div>
                     </div>
@@ -107,7 +107,10 @@
                 </form>
             </fieldset>
         </div>
-        <div class="col-8">
+        
+    </div>
+    <div class="row">
+        <div class="col-12">
             <h3>Projects List</h3>
             <table class="table table-bordered table-striped mt-3"
                 *ngIf="projects.length > 0">

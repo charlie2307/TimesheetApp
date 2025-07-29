@@ -24,6 +24,7 @@ export interface ProjectClient {
   styleUrl: './dashboad.component.css'
 })
 export class DashboadComponent implements OnInit {
+
   timeslots: any[] = [];
   functions: any[] = [];
   projectClients: ProjectClient[] = [];
@@ -122,7 +123,8 @@ export class DashboadComponent implements OnInit {
     this.timesheetForm = this.fb.group({
       type: ['', Validators.required],
       minute: [{ value: '', disabled: true }, Validators.required],
-      projectAndClient: ['', Validators.required]
+      projectAndClient: ['', Validators.required],
+      module: ['', Validators.required]
     });
 
 
@@ -272,40 +274,45 @@ export class DashboadComponent implements OnInit {
       sloT_ID: slot_ID
     }
     console.log(requestData);
-    this.empService.GETMINUTES(requestData).subscribe({
-      next: (res) => {
-        maxTime = Number(res);
-        console.log('res:', res);
-        console.log('Max Time:', maxTime);
+    if (this.taskApproved != true) {
+      this.empService.GETMINUTES(requestData).subscribe({
+        next: (res) => {
+          maxTime = Number(res);
+          console.log('res:', res);
+          console.log('Max Time:', maxTime);
 
-        if (maxTime < 60) {
-          this.loadFunctions();
-          this.maxSlotTime = maxTime;
-          console.log("mxSlot:" + this.maxSlotTime)
-          this.isSlotSelected = true;
-          this.isFunSelected = false;
-          this.isProjectSelected = false;
+          if (maxTime < 60) {
+            this.loadFunctions();
+            this.maxSlotTime = maxTime;
+            console.log("mxSlot:" + this.maxSlotTime)
+            this.isSlotSelected = true;
+            this.isFunSelected = false;
+            this.isProjectSelected = false;
 
-          this.selectedFunctionId = 0;
-          this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
+            this.selectedFunctionId = 0;
+            this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
+          }
+          else {
+            alert("This slot is full.");
+
+            this.isSlotSelected = false;
+            this.isFunSelected = false;
+            this.isProjectSelected = false;
+
+            this.selectedFunctionId = 0;
+            this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
+          }
+
+        },
+
+        error: (err) => {
+          console.error('Error fetching max time:', err);
         }
-        else {
-          alert("This slot is full.");
-
-          this.isSlotSelected = false;
-          this.isFunSelected = false;
-          this.isProjectSelected = false;
-
-          this.selectedFunctionId = 0;
-          this.timesheetForm.reset({ timeslot: (event.target as HTMLSelectElement).value });
-        }
-
-      },
-
-      error: (err) => {
-        console.error('Error fetching max time:', err);
-      }
-    });
+      });
+    }
+    else{
+      alert("Todays tasks are approved. Come tommarow at 10 am.")
+    }
 
   }
 
@@ -330,6 +337,10 @@ export class DashboadComponent implements OnInit {
     this.timesheetForm.get('module')?.reset();
     this.timesheetForm.get('minute')?.reset();
     this.timesheetForm.get('description')?.reset();
+
+    if (this.modules.length === 0) {
+      this.timesheetForm.get('module')?.clearValidators();
+    }
   }
 
   onprojectselect(event: Event) {
@@ -346,9 +357,9 @@ export class DashboadComponent implements OnInit {
       this.timesheetForm.get('module')?.disable();
     }
 
-    if (this.maxSlotTime === 0) {
-      this.condition = true;
-    }
+    // if (this.maxSlotTime === 0) {
+    //   this.condition = true;
+    // }
 
   }
 
@@ -387,8 +398,8 @@ export class DashboadComponent implements OnInit {
         console.log("Type:" + this.timesheetForm.get('type')?.value);
       }
       else {
-        alert("You already Used Some minutes From This Slot So you not used The Full Time Type for this slot.");
         this.timesheetForm.invalid;
+        alert("You already Used Some minutes From This Slot So you not used The Full Time Type for this slot.");
       }
 
       this.timesheetForm.get('minute')?.clearValidators();
@@ -478,10 +489,10 @@ export class DashboadComponent implements OnInit {
     this.isFunSelected = false;
     this.maxSlotTime = 0;
 
-    if(this.maxSlotTime===60){
-      this.isSlotSelected=false
+    if (this.maxSlotTime === 60) {
+      this.isSlotSelected = false;
     }
-    
+    this.GetEmpTaskData();
   }
 
   // getslotminutes() {

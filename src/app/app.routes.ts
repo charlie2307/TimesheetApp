@@ -12,6 +12,7 @@ import { LoginComponent } from "./login/login/login.component";
 import { RegisterComponent } from "./login/register/register.component";
 import { TimeslotComponent } from "./admin/timeslot/timeslot.component";
 import { DashboadComponent } from "./employee/dashboad/dashboad.component";
+import { ManageHolidaysComponent } from "./admin/manage-holidays/manage-holidays.component";
 // import { TimesheetComponent } from "./employee/timesheet/timesheet.component";
 
 export const routes: Routes = [
@@ -32,7 +33,8 @@ export const routes: Routes = [
             { path: 'function', component: FunctionComponent },
             { path: 'module', component: ModuleComponent },
             { path: 'role', component: RoleComponent },
-            { path: 'timeslot', component: TimeslotComponent }
+            { path: 'timeslot', component: TimeslotComponent },
+            {path:'holidays',component:ManageHolidaysComponent}
         ]
     },
     // { path: '**', redirectTo: 'login' }

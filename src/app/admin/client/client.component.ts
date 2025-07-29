@@ -17,11 +17,12 @@ export class ClientComponent {
   isEditing: boolean = false;
   editingClientId: number | null = null;
 
+
   constructor(private fb: FormBuilder,private adminService:AdminService) {}
 
   ngOnInit() {
     this.clientForm = this.fb.group({
-      client_name: [
+      clienT_NAME: [
         '',
         [
           Validators.required,
@@ -30,7 +31,7 @@ export class ClientComponent {
           Validators.pattern(/^[A-Za-z\s]+$/),
         ],
       ],
-      client_code: [
+      clienT_CODE: [
         '',
         [
           Validators.required,
@@ -71,9 +72,13 @@ export class ClientComponent {
         return;
       }
 
-      const formData = this.clientForm.value;
-      console.log('Submitting client:', formData);
+      // const formData = this.clientForm.value;
+      // console.log('Submitting client:', formData);
 
+      const formData = {
+        clienT_ID: this.editingClientId,
+        ...this.clientForm.value // 👈 include employee ID
+      }
 
       this.adminService.addClient(formData).subscribe({
         next: (res) => {
@@ -137,8 +142,8 @@ export class ClientComponent {
 
   editBtn(client: any) {
     this.isEditing = true;
-    this.editingClientId = client.client_ID;
-
+    this.editingClientId = client.clienT_ID;
+console.log(client.clienT_ID);
     this.clientForm.patchValue({
       clienT_NAME: client.clienT_NAME,
       clienT_CODE: client.clienT_CODE
@@ -151,6 +156,7 @@ export class ClientComponent {
         next: (res) => {
           alert(res);
           this.loadClient(); // reload list
+          this.resetForm();
         },
         error: (err) => {
           console.error('Delete error:', err);

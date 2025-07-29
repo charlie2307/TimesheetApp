@@ -8,28 +8,28 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule,FormsModule,AdminComponent,RouterOutlet],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, FormsModule, AdminComponent, RouterOutlet],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   email = '';
   password = '';
   error: string = '';
-employeefunction:any[]=[]
+  employeefunction: any[] = []
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
   ) { }
-  
+
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email,Validators.maxLength(100)]],
-      pass: ['', [Validators.required,Validators.minLength(8),
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
+      pass: ['', [Validators.required, Validators.minLength(8),
       Validators.maxLength(20)]]
     });
     // this.router.navigate(['/empDashboard']);
@@ -41,7 +41,7 @@ employeefunction:any[]=[]
     console.log(email);
     console.log(password);
 
-    if (email==="admin123@gmail.com" && password==="Admin@123") {
+    if (email === "admin123@gmail.com" && password === "Admin@123") {
       window.location.href = '/admin';
 
       // this.authService.login(email, password).subscribe(
@@ -53,34 +53,36 @@ employeefunction:any[]=[]
       //   }
       // );
     } else {
-      
+
       this.authService.login(email, password).subscribe(
         (res: any) => {
-        
 
-           this.employeefunction=res.functions;
+
+          this.employeefunction = res.functions;
           // console.log(this.employeefunction);
-        
-            // functions.functions
+
+          // functions.functions
 
           if (res.role !== 'admin') {
-              sessionStorage.setItem('EMP_NAME',res.emP_NAME);
-            sessionStorage.setItem('EMP_ID',res.emP_ID);
-            sessionStorage.setItem('EMP_ROLE',res.emP_ROLE);
+            sessionStorage.setItem('EMP_NAME', res.emP_NAME);
+            sessionStorage.setItem('EMP_ID', res.emP_ID);
+            sessionStorage.setItem('EMP_ROLE', res.emP_ROLE);
             console.log(sessionStorage.getItem('EMP_ROLE'));
             console.log(sessionStorage.getItem('EMP_ID'));
-            //console.log(sessionStorage.getItem('EMP_NAME'));
             console.log(this.employeefunction);
             sessionStorage.setItem('employeefun', JSON.stringify(this.employeefunction));
             this.router.navigate(['/dashboard']);
-              
+
           } else {
             this.error = 'Invalid login attempt';
+            alert('Invalid login attempt');
           }
         },
         (err) => {
           this.error = 'Login failed';
-          this.router.navigate(['/login']);
+          alert('Login failed');
+          // this.router.navigate(['/login']);
+          this.ngOnInit();
         }
       );
     }
@@ -99,6 +101,4 @@ employeefunction:any[]=[]
   //     }
   //   });
   // }
-
-  
 }

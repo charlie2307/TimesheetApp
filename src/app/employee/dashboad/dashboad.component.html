@@ -97,9 +97,9 @@
                                     <label
                                         class="form-label fw-bold d-flex">Time
                                         Mode</label>
-                                    <div class="form-check d-inline-block">
+                                    <div class="form-check d-inline-block" >
                                         <input class="form-check-input"
-                                            type="radio"
+                                            type="radio" [disabled]="maxSlotTime!=0"
                                             name="timeType" value="1"
                                             (change)="onselectTimeType($event)">
                                         <label
@@ -171,7 +171,7 @@
                         *ngFor="let empdates of EmployeeTasks">{{empdates.employeeWorkDate}}</option>
                 </select>
             </div>
-            <input type="date" [value]="selectedDate" />
+            
             <!-- (change)="onDateChange($event)" -->
             <table
                 class="table table-bordered table-striped table-hover align-middle text-center">
@@ -184,7 +184,7 @@
                         <th>Task Hours</th>
                         <th>Task Time From</th>
                         <th>Task Time To</th>
-                        <th>Task Desc</th>
+                        <!-- <th>Task Desc</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -201,7 +201,7 @@
                             ? 'Split' : emp.taskHours }}</td>
                         <td>{{ emp.taskTimeFrom }}</td>
                         <td>{{ emp.taskTimeTo }}</td>
-                        <td>{{ emp.taskDesc }}</td>
+                        <!-- <td>{{ emp.taskDesc }}</td> -->
                     </tr>
                 </tbody>
             </table>

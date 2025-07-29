@@ -108,7 +108,7 @@ export class RoleComponent implements OnInit {
       console.log('Submitting role:', formData);
 
 
-      this.adminService.addEmployee(formData).subscribe({
+      this.adminService.addRole(formData).subscribe({
         next: (res) => {
           alert('Role added successfully!');
           this.roleForm.reset();

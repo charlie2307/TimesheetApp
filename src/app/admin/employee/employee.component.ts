@@ -108,8 +108,11 @@ export class EmployeeComponent implements OnInit {
       console.log(this.employeeForm.value)
 
       const formData = {
-        EMP_ID: this.editingEmpId, // 👈 include employee ID
-        ...this.employeeForm.value
+        emP_ID: this.editingEmpId, // 👈 include employee ID
+        emP_NAME: this.employeeForm.get('emP_NAME')?.value,
+        emP_CODE: this.employeeForm.get('emP_CODE')?.value,
+        emP_MOBILE_NO: this.employeeForm.get('emP_MOBILE_NO')?.value,
+        rolE_ID: this.employeeForm.get('rolE_ID')?.value
       };
       console.log('Submitting employee:', formData);
 
