@@ -32,7 +32,6 @@ export class LoginComponent implements OnInit {
       pass: ['', [Validators.required, Validators.minLength(8),
       Validators.maxLength(20)]]
     });
-    // this.router.navigate(['/empDashboard']);
   }
 
   login(): void {

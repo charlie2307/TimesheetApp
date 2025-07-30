@@ -138,6 +138,7 @@ export class ClientComponent {
     else {
       this.clientForm.markAllAsTouched();
     }
+    this.isEditing=false;
   }
 
   editBtn(client: any) {

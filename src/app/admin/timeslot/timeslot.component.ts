@@ -31,7 +31,7 @@ export class TimeslotComponent implements OnInit {
     this.timeslotForm = this.fb.group({
       timeslot: [
         '',
-        [Validators.required, Validators.pattern(/^\d{2}-\d{2}$/)]
+        [Validators.required, Validators.pattern(/^[A-Za-z0-9\s]+$/ )]
       ]
     });
 

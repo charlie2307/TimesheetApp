@@ -134,6 +134,7 @@ export class EmployeeComponent implements OnInit {
     else {
       this.employeeForm.markAllAsTouched();
     }
+    this.isEditing=false;
   }
 
   onSubmit() {
@@ -161,18 +162,6 @@ export class EmployeeComponent implements OnInit {
         }
       });
 
-      // this.adminService.addEmployee(this.employeeForm.value).subscribe(
-      //   (data) => {
-      //     console.log('Form Submitted:', this.employeeForm.value);
-      //     alert('Employee registered successfully!');
-      //     this.employeeForm.reset();
-      //   },
-      //   (err) => {
-      //     this.employeeForm.markAllAsTouched();
-      //     console.error('Registration error:', err);
-      //     alert('Registration failed. Please try again.');
-      //   }
-      // );
       this.employeeForm.reset();
     } else {
       this.employeeForm.markAllAsTouched();

@@ -51,7 +51,6 @@
                     <div class="card shadow-sm" *ngIf="isFunSelected">
                         <div class="card-body">
                             <div class="row g-3">
-
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">ClientCode
                                         -
@@ -97,9 +96,10 @@
                                     <label
                                         class="form-label fw-bold d-flex">Time
                                         Mode</label>
-                                    <div class="form-check d-inline-block" >
+                                    <div class="form-check d-inline-block">
                                         <input class="form-check-input"
-                                            type="radio" [disabled]="maxSlotTime!=0"
+                                            type="radio"
+                                            [disabled]="maxSlotTime!=0"
                                             name="timeType" value="1"
                                             (change)="onselectTimeType($event)">
                                         <label
@@ -152,27 +152,30 @@
                                     </button>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 
     <div class="container mt-4">
         <div class="table-responsive">
-            <div>
+            <!-- <div>
                 <select (change)="GetEmployeeTask($event)">
                     <option value>Select Date</option>
                     <option value="{{empdates.employeeWorkDate}}"
                         *ngFor="let empdates of EmployeeTasks">{{empdates.employeeWorkDate}}</option>
                 </select>
+            </div> -->
+
+            <div>
+                <input
+                    type="date"
+                    formControlName="workDate"
+                    (change)="GetEmployeeTask()" />
             </div>
-            
-            <!-- (change)="onDateChange($event)" -->
+
             <table
                 class="table table-bordered table-striped table-hover align-middle text-center">
                 <thead class="table-dark">

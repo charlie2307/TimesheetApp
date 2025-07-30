@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../navbar/navbar.component';
 import { Router, RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminComponent } from '../../admin/admin/admin.component';
 import { AdminService } from '../../services/admin.service';
 import { EmpService } from '../../services/emp.service';
@@ -19,7 +19,7 @@ export interface ProjectClient {
 
 @Component({
   selector: 'app-dashboad',
-  imports: [CommonModule, NavbarComponent, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, NavbarComponent, RouterModule, ReactiveFormsModule, FormsModule],
   templateUrl: './dashboad.component.html',
   styleUrl: './dashboad.component.css'
 })
@@ -42,7 +42,7 @@ export class DashboadComponent implements OnInit {
   taskApproved: boolean = false;
   condition: boolean = false;
   currentDateTime!: Date;
-  today = new Date();
+    today!:Date;
   newDateTime = new Date();
   modules: any[] = [{}];
   time: number = 0;
@@ -94,13 +94,11 @@ export class DashboadComponent implements OnInit {
     this.timesheetDate();
     this.getTodayAndTomorrow10AM();
 
-    const today = new Date();
-    this.selectedDate = today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    this.today = new Date();
+    this.selectedDate = this.today.toISOString().split('T')[0]; // Format YYYY-MM-DD
 
     this.employeeTimesheet.sort((a, b) => a.taskTimeSlot.localeCompare(b.taskTimeSlot));
 
-
-    // this.minutes = Array.from({ length: this.time }, (_, i) => i);
     setInterval(() => this.currentDateTime = new Date(), 1000);
 
     this.initForm();
@@ -116,17 +114,30 @@ export class DashboadComponent implements OnInit {
     // }
     const timeChange =
       this.currentDateTime = new Date();
-    setInterval(() => {
-      this.currentDateTime = new Date();
-    }, 1000);
+    // setInterval(() => {
+    //   this.currentDateTime = new Date();
+    // }, 1000);
 
     this.timesheetForm = this.fb.group({
+      timeslot: [''],
       type: ['', Validators.required],
       minute: [{ value: '', disabled: true }, Validators.required],
       projectAndClient: ['', Validators.required],
-      module: ['', Validators.required]
+      functionBtn: this.selectedFunc,
+      module: ['', Validators.required],
+      description: [''],
+      workDate: ['']
     });
 
+    // this.timesheetForm = this.fb.group({
+    //   timeslot: [''],
+    //   projectAndClient: [''],
+    //   module: [''],
+    //   type: 0,
+    //   minute: [''],
+    //   functionBtn: this.selectedFunc,
+    //   description: ['']
+    // });
 
     this.timesheetForm.get('type')?.valueChanges.subscribe(value => {
       const minuteControl = this.timesheetForm.get('minute');
@@ -136,16 +147,6 @@ export class DashboadComponent implements OnInit {
       } else if (value === 'Split') {
         minuteControl?.enable();
       }
-    });
-
-    this.timesheetForm = this.fb.group({
-      timeslot: [''],
-      projectAndClient: [''],
-      module: [''],
-      type: 0,
-      minute: [''],
-      functionBtn: this.selectedFunc,
-      description: ['']
     });
 
     this.timesheet = this.fb.group({
@@ -158,7 +159,7 @@ export class DashboadComponent implements OnInit {
       timE_FROM: '',
       timE_TO: '',
       timesheeT_DESC: '',
-      createD_BY: ''
+      createD_BY: '',
     })
 
     this.taskApproved = Boolean(localStorage.getItem('taskApproved'));
@@ -220,7 +221,8 @@ export class DashboadComponent implements OnInit {
       module: ['', Validators.required],
       type: [0, Validators.required],
       minute: [''],
-      description: ['']
+      description: [''],
+      workDate:['']
     });
   }
 
@@ -310,7 +312,7 @@ export class DashboadComponent implements OnInit {
         }
       });
     }
-    else{
+    else {
       alert("Todays tasks are approved. Come tommarow at 10 am.")
     }
 
@@ -559,8 +561,11 @@ export class DashboadComponent implements OnInit {
     const today10AM = new Date();
     today10AM.setHours(10, 0, 0, 0);
 
+    this.today10am=today10AM;
+
     const tomorrow10AM = new Date(today10AM);
     tomorrow10AM.setDate(today10AM.getDate() + 1);
+    this.tommarow10am = tomorrow10AM;
 
     console.log("Today 10AM:", today10AM);
     console.log("Tomorrow 10AM:", tomorrow10AM);
@@ -568,10 +573,13 @@ export class DashboadComponent implements OnInit {
     return { today10AM, tomorrow10AM };
   }
 
-  GetEmployeeTask(event: Event) {
-    const selectedDate = (event.target as HTMLInputElement).value;
-    console.log("Selected Date: " + selectedDate);
+  GetEmployeeTask() {
+
     let emp_id = Number(sessionStorage.getItem('EMP_ID'));
+    const selectedDate = this.timesheetForm.get('workDate')?.value;
+    if (!selectedDate) return;
+    console.log("SelectedDate:"+selectedDate);
+
     this.empService.GetEmpTaskDetails({ emp_ID: emp_id, emp_Work_date: selectedDate }).subscribe(response => {
       console.log(response);
       this.employeeTimesheet = response;
