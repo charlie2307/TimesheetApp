@@ -8,7 +8,7 @@ import { AdminService } from '../../services/admin.service';
 import { EmpService } from '../../services/emp.service';
 
 export interface Timeslot {
-  timeslot: string;
+  sloT_NAME: string;
   sloT_ID: number;
 }
 export interface ProjectClient {
@@ -25,7 +25,7 @@ export interface ProjectClient {
 })
 export class DashboadComponent implements OnInit {
 
-  timeslots: any[] = [];
+  timeslots: Timeslot[] = [];
   functions: any[] = [];
   projectClients: ProjectClient[] = [];
   employeeTimesheet: any[] = [];
@@ -42,7 +42,7 @@ export class DashboadComponent implements OnInit {
   taskApproved: boolean = false;
   condition: boolean = false;
   currentDateTime!: Date;
-    today!:Date;
+  today!: Date;
   newDateTime = new Date();
   modules: any[] = [{}];
   time: number = 0;
@@ -88,7 +88,6 @@ export class DashboadComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTimeslots();
-    // this.loadFunctions();
     this.loadProjects();
     this.GetEmpTaskData();
     this.timesheetDate();
@@ -96,10 +95,10 @@ export class DashboadComponent implements OnInit {
 
     this.today = new Date();
     this.selectedDate = this.today.toISOString().split('T')[0]; // Format YYYY-MM-DD
-
     this.employeeTimesheet.sort((a, b) => a.taskTimeSlot.localeCompare(b.taskTimeSlot));
 
     setInterval(() => this.currentDateTime = new Date(), 1000);
+
 
     this.initForm();
 
@@ -121,7 +120,7 @@ export class DashboadComponent implements OnInit {
     this.timesheetForm = this.fb.group({
       timeslot: [''],
       type: ['', Validators.required],
-      minute: [{ value: '', disabled: true }, Validators.required],
+      minute: ['', Validators.required],
       projectAndClient: ['', Validators.required],
       functionBtn: this.selectedFunc,
       module: ['', Validators.required],
@@ -161,11 +160,17 @@ export class DashboadComponent implements OnInit {
       timesheeT_DESC: '',
       createD_BY: '',
     })
-
     this.taskApproved = Boolean(localStorage.getItem('taskApproved'));
 
   }
 
+  loadTimeslots() {
+    this.empService.GetSlot().subscribe(data => {
+      this.timeslots = data
+      console.log(this.timeslots)
+    }
+    );
+  }
 
   timesheetDate() {
     const now = new Date();
@@ -222,17 +227,11 @@ export class DashboadComponent implements OnInit {
       type: [0, Validators.required],
       minute: [''],
       description: [''],
-      workDate:['']
+      workDate: ['']
     });
   }
 
-  loadTimeslots() {
-    this.empService.GetSlot().subscribe(data => {
-      this.timeslots = data
-      console.log(data)
-    }
-    );
-  }
+  
 
   loadFunctions() {
     const storedData = sessionStorage.getItem('employeefun');
@@ -240,7 +239,6 @@ export class DashboadComponent implements OnInit {
       this.functions = JSON.parse(storedData);
       console.log('Function list from sessionStorage:', this.functions);
     }
-
   }
 
   loadProjects() {
@@ -413,8 +411,8 @@ export class DashboadComponent implements OnInit {
       //   alert("You already Used Some minutes From This Slot So you not used The Full Time Type for this slot.");
       // }
 
-      this.timesheetForm.patchValue({ type: 1 });
-      console.log(this.timesheetForm.get('type')?.value);
+      // this.timesheetForm.patchValue({ type: 1 });
+      // console.log(this.timesheetForm.get('type')?.value);
     }
   }
 
@@ -561,7 +559,7 @@ export class DashboadComponent implements OnInit {
     const today10AM = new Date();
     today10AM.setHours(10, 0, 0, 0);
 
-    this.today10am=today10AM;
+    this.today10am = today10AM;
 
     const tomorrow10AM = new Date(today10AM);
     tomorrow10AM.setDate(today10AM.getDate() + 1);
@@ -578,7 +576,7 @@ export class DashboadComponent implements OnInit {
     let emp_id = Number(sessionStorage.getItem('EMP_ID'));
     const selectedDate = this.timesheetForm.get('workDate')?.value;
     if (!selectedDate) return;
-    console.log("SelectedDate:"+selectedDate);
+    console.log("SelectedDate:" + selectedDate);
 
     this.empService.GetEmpTaskDetails({ emp_ID: emp_id, emp_Work_date: selectedDate }).subscribe(response => {
       console.log(response);

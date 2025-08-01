@@ -19,8 +19,10 @@
                 formControlName="timeslot"
                 (change)="ontimeslotchange($event)">
                 <option selected disabled>-- Select Timeslot --</option>
-                <option *ngFor="let ts of timeslots" [value]="ts.sloT_ID">{{
-                    ts.sloT_NAME }}</option>
+                <option *ngFor="let ts of timeslots" [value]="ts.sloT_ID">
+                    {{ ts.sloT_NAME }}
+                </option>
+
             </select>
         </div>
     </div>
@@ -121,9 +123,8 @@
                                     <label class="form-label fw-bold">Time
                                         (Minutes)</label>
                                     <select class="form-select"
-                                        formControlName="minute"
-                                        [required]="condition">
-                                        <option selected disabled>Select
+                                        formControlName="minute">
+                                        <option selected>Select
                                             Minute</option>
                                         <option *ngFor="let min of minutes"
                                             [value]="min+1">{{ min+1 }}
