@@ -44,7 +44,7 @@ export class EmpService {
   //   return this.http.get<ProjectClient[]>("https://localhost:7038/api/Admin/Get_All_SlotDetails");
   // }
   GetSlot(): Observable<any[]> {
-    return this.http.get<any[]>("https://localhost:7038/api/Admin/Get_Active_SlotDetails");
+    return this.http.get<any[]>("https://localhost:7038/api/Admin/GET_ALL_TIMESLOT");
   }
 
   SubmitTask(SubmitTask: {}) {

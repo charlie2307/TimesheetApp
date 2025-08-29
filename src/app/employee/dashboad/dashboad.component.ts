@@ -42,7 +42,8 @@ export class DashboadComponent implements OnInit {
   taskApproved: boolean = false;
   condition: boolean = false;
   currentDateTime!: Date;
-  today!: Date;
+  today: string = new Date().toISOString().split('T')[0];
+  // today!: Date;
   newDateTime = new Date();
   modules: any[] = [{}];
   time: number = 0;
@@ -56,6 +57,7 @@ export class DashboadComponent implements OnInit {
   TimeTO: string = '';
   timefrom = 0;
   timeto = 0;
+  isToday: boolean = false;
 
   selectedDate: string = '';
   maxSlotTime: number = 0;
@@ -93,11 +95,13 @@ export class DashboadComponent implements OnInit {
     this.timesheetDate();
     this.getTodayAndTomorrow10AM();
 
-    this.today = new Date();
-    this.selectedDate = this.today.toISOString().split('T')[0]; // Format YYYY-MM-DD
+    console.log("todat" + this.today)
+    this.selectedDate = new Date().toISOString().split('T')[0];  // this.today.toISOString().split('T')[0]; // Format YYYY-MM-DD
     this.employeeTimesheet.sort((a, b) => a.taskTimeSlot.localeCompare(b.taskTimeSlot));
 
     setInterval(() => this.currentDateTime = new Date(), 1000);
+
+
 
 
     this.initForm();
@@ -125,7 +129,7 @@ export class DashboadComponent implements OnInit {
       functionBtn: this.selectedFunc,
       module: ['', Validators.required],
       description: [''],
-      workDate: ['']
+      workDate: [this.today]
     });
 
     // this.timesheetForm = this.fb.group({
@@ -161,6 +165,14 @@ export class DashboadComponent implements OnInit {
       createD_BY: '',
     })
     this.taskApproved = Boolean(localStorage.getItem('taskApproved'));
+
+    const selectedDate = new Date(this.timesheetForm.get('workDate')?.value);
+    const currentDate = new Date();
+
+    this.isToday =
+      selectedDate.getDate() === currentDate.getDate() &&
+      selectedDate.getMonth() === currentDate.getMonth() &&
+      selectedDate.getFullYear() === currentDate.getFullYear();
 
   }
 
@@ -231,7 +243,7 @@ export class DashboadComponent implements OnInit {
     });
   }
 
-  
+
 
   loadFunctions() {
     const storedData = sessionStorage.getItem('employeefun');
@@ -493,6 +505,7 @@ export class DashboadComponent implements OnInit {
       this.isSlotSelected = false;
     }
     this.GetEmpTaskData();
+
   }
 
   // getslotminutes() {
@@ -571,10 +584,23 @@ export class DashboadComponent implements OnInit {
     return { today10AM, tomorrow10AM };
   }
 
+  isTodayDate() {
+    const selectedDate = new Date(this.timesheetForm.get('workDate')?.value);
+    const currentDate = new Date();
+
+    // Compare dates without time
+    this.isToday =
+      selectedDate.getDate() === currentDate.getDate() &&
+      selectedDate.getMonth() === currentDate.getMonth() &&
+      selectedDate.getFullYear() === currentDate.getFullYear();
+  }
+
   GetEmployeeTask() {
+    const selectedDate = new Date(this.timesheetForm.get('workDate')?.value);
+    this.isTodayDate();
 
     let emp_id = Number(sessionStorage.getItem('EMP_ID'));
-    const selectedDate = this.timesheetForm.get('workDate')?.value;
+
     if (!selectedDate) return;
     console.log("SelectedDate:" + selectedDate);
 

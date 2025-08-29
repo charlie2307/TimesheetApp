@@ -1,5 +1,6 @@
 <app-navbar></app-navbar>
 
+
 <div class="container mt-4" [formGroup]="timesheetForm">
     <h3 class="mb-4 text-primary">Employee Timesheet</h3>
 
@@ -10,7 +11,6 @@
                 }}</p>
         </div>
     </div>
-
     <!-- Step 1: Timeslot -->
     <div class="row mb-4">
         <div class="col-md-3">
@@ -147,7 +147,7 @@
                                 <div class="col text-end">
                                     <button class="btn btn-success"
                                         type="submit"
-                                        (click)="onSubmit()"
+                                        (click)="onSubmit(); ontimeslotchange($event)"
                                         [disabled]="timesheetForm.invalid">
                                         Submit Task
                                     </button>
@@ -213,7 +213,7 @@
             <div class="row justify-content-end mt-3">
                 <div class="col-md-3 text-end">
                     <button class="btn btn-primary w-100"
-                        (click)="onApproveClick()"
+                        (click)="onApproveClick()" *ngIf="isToday"
                         [disabled]="taskApproved">
                         Approve Task
                     </button>

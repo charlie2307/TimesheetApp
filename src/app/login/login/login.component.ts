@@ -3,12 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { AdminComponent } from '../../admin/admin/admin.component';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterModule, ReactiveFormsModule, CommonModule, FormsModule, AdminComponent, RouterOutlet],
+  imports: [RouterModule, ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
